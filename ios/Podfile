@@ -34,6 +34,15 @@ target 'Project' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  # Point to the installed version
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker/RNDateTimePicker.podspec'
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  source 'https://github.com/CocoaPods/Specs.git'
+  pod 'GoogleMaps'
+  pod 'GooglePlaces'
+
   target 'ProjectTests' do
     inherit! :search_paths
     # Pods for testing
