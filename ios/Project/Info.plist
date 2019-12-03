@@ -72,5 +72,11 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+
+	<key>NSCalendarsUsageDescription</key>
+  <string>我們想存取您的行事曆</string>
+
+	<key>NSContactsUsageDescription</key>
+  <string>我們想存取您的聯絡</string>
 </dict>
 </plist>

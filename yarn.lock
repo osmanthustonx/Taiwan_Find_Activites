@@ -4111,7 +4111,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash.isequal@4.5.0:
+lodash.isequal@4.5.0, lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
   integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
@@ -4561,6 +4561,11 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   integrity sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=
   dependencies:
     minimist "0.0.8"
+
+moment@^2.24.0:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
 morgan@^1.9.0:
   version "1.9.1"
@@ -5361,10 +5366,9 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-add-calendar-event@^3.0.0:
+"react-native-add-calendar-event@https://github.com/vonovak/react-native-add-calendar-event.git":
   version "3.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-add-calendar-event/-/react-native-add-calendar-event-3.0.0.tgz#f025d3146630ee50d7eb638244397a05932e3506"
-  integrity sha512-7pqK4bAWwtvjBih5izCrQ3sgFAMcOgo7xCFDfOUHPQAyd4XI6KOWW4RR+MSTjqWQJplVGMgiIkxwWcX6q1d3/A==
+  resolved "https://github.com/vonovak/react-native-add-calendar-event.git#84de37daa603ded6eb9f4379ef6d1c7ff4c0024d"
 
 react-native-clean-project@^3.3.0:
   version "3.3.0"
@@ -5394,6 +5398,18 @@ react-native-image-picker@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-1.1.0.tgz#c2a0523886edb4cf2cdc008ad0a71433142a4d53"
   integrity sha512-/KjHf4NNAjl6XM7FQuqvGDz1wB9sRdLf86+2yksLW/QTRR7CitX4TLCM8ZF9CX6Y0MsCTndkZia3zWE+nt/GiA==
+
+react-native-permissions@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.0.5.tgz#fbb338f5f4fd3dfcaff415d614a5d3b4af63885b"
+  integrity sha512-6eKWGPvBL3RpobqumNNjXxCvZIfIZOKwOSPq8rGu2jL9O9jSllm0IqBcamRKhi3BN+uwh4gWaOBzFLLq2/94zQ==
+
+react-native-picker-select@^6.3.3:
+  version "6.3.3"
+  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-6.3.3.tgz#ea4d20a385041a2f4ead3eb3398b08511d7d6c2a"
+  integrity sha512-9cSXWonugev+e0EHrV8FhzwkjAhpipLFXsGMv+Ns5xI47T9fyNrOXpSeSfgnmycbuAbWRVlJRhJZ9eDGUaNk7w==
+  dependencies:
+    lodash.isequal "^4.5.0"
 
 react-native-router-flux@^4.0.6:
   version "4.0.6"
