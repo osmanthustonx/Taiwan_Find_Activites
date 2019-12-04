@@ -4,6 +4,8 @@ import {Actions} from 'react-native-router-flux';
 
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import moment from 'moment';
+import {Card} from 'react-native-elements';
+import {Rating} from 'react-native-ratings';
 
 const utcDateToString = (momentInUTC: moment): string => {
   let s = moment.utc(momentInUTC).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
@@ -12,10 +14,21 @@ const utcDateToString = (momentInUTC: moment): string => {
 };
 
 export default class About extends React.Component {
+  ratingCompleted(rating) {
+    console.log(`Rating is: ${rating}`);
+  }
   render() {
     const nowUTC = moment.utc();
     return (
       <View style={styles.container}>
+        <Card title="WITH FRACTIONS" containerStyle={styles.card}>
+          <Rating
+            showRating={true}
+            fractions={1}
+            ratingTextColor="teal"
+            onStartRating={() => console.log('started rating')}
+          />
+        </Card>
         <Text style={styles.welcome}>About {this.props.user}</Text>
         <Text>
           date:{' '}
