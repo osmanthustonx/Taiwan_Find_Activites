@@ -2,15 +2,13 @@ import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 
-export default class Activity extends React.Component {
-  onPress = () => {
-    Actions.activityInfo({user: '花的世界'});
-  };
+export default class About extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome {this.props.title}</Text>
-        <Button onPress={this.onPress} title="Go to About" />
+        <Text style={styles.welcome}>About {this.props.user}</Text>
+
+        <Button onPress={Actions.pop} title="Back" />
       </View>
     );
   }
