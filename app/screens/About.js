@@ -6,6 +6,7 @@ import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import moment from 'moment';
 import {Card} from 'react-native-elements';
 import {Rating} from 'react-native-ratings';
+import {Popup, showLocation} from 'react-native-map-link';
 
 const utcDateToString = (momentInUTC: moment): string => {
   let s = moment.utc(momentInUTC).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
@@ -13,10 +14,22 @@ const utcDateToString = (momentInUTC: moment): string => {
   return s;
 };
 
+const options = {
+  latitude: 37.7025259,
+  longitude: -122.4351431,
+  title: 'The White House',
+  dialogTitle: 'This is the dialog Title',
+  dialogMessage: 'This is the amazing dialog Message',
+  cancelText: 'This is the cancel button text',
+};
+
 export default class About extends React.Component {
   ratingCompleted(rating) {
     console.log(`Rating is: ${rating}`);
   }
+  state = {
+    isVisible: false,
+  };
   render() {
     const nowUTC = moment.utc();
     return (
@@ -46,6 +59,24 @@ export default class About extends React.Component {
         />
 
         <Button onPress={Actions.pop} title="Back" />
+        <Popup
+          isVisible={this.state.isVisible}
+          onCancelPressed={() => this.setState({isVisible: false})}
+          onAppPressed={() => this.setState({isVisible: false})}
+          onBackButtonPressed={() => this.setState({isVisible: false})}
+          options={options}
+        />
+
+        <Button
+          onPress={() => showLocation(options)}
+          title="Show in Maps using action sheet"
+        />
+        <Button
+          onPress={() => {
+            this.setState({isVisible: true});
+          }}
+          title="Show in Maps using Popup"
+        />
       </View>
     );
   }
