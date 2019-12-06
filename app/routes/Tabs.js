@@ -22,8 +22,13 @@ export default class Routes extends Component {
   render() {
     return (
       <Router>
-        <Stack key="root" navigationBarStyle={{backgroundColor: 'skyblue'}}>
-          <Scene key="login" component={Login} />
+        <Stack key="root">
+          <Scene
+            key="login"
+            component={Login}
+            title="登入"
+            navigationBarStyle={{backgroundColor: 'skyblue'}}
+          />
           <Tabs
             hideNavBar={true}
             key="tabbar" // 在 Tabs 的 key(tabbar) 可以讓 login 完之後，可以透過 action.tabbar，讓你的應用切換到這個 tabbar 的場景當中

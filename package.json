@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "clean": "npx react-native clean-project-auto",
-    "clean-cache": "npx react-native start -- --reset-cache"
+    "clean-cache": "npx react-native start -- --reset-cache",
+    "ios": "npx react-native run-ios --simulator='iPhone 8'"
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "^2.1.0",

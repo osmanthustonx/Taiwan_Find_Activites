@@ -1,6 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button, TextInput} from 'react-native';
+import {View, StyleSheet, Text, TextInput} from 'react-native';
 import {Actions} from 'react-native-router-flux';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {Input, Button} from 'react-native-elements';
 
 export default class Login extends React.Component {
   state = {
@@ -24,18 +26,30 @@ export default class Login extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome {this.props.title}</Text>
-        <TextInput
-          placeholder="Email"
-          onChangeText={text => this.validate(text)}
-          style={{
-            width: 100,
-            borderRadius: 1,
-            borderColor: 'black',
-            backgroundColor: '#ddd',
-          }}
+        {/* <Input placeholder="BASIC INPUT" /> */}
+        <Input
+          placeholder="請輸入電子信箱"
+          leftIcon={<Icon name="ios-mail" size={24} color="black" />}
+          leftIconContainerStyle={{paddingRight: 10}}
+          errorStyle={{color: 'red'}}
+          errorMessage="ENTER A VALID ERROR HERE"
         />
-        <Button onPress={this.onPress} title="Go to About" />
+        <Input
+          placeholder="請輸入密碼"
+          leftIcon={<Icon name="ios-lock" size={24} color="black" />}
+          leftIconContainerStyle={{paddingRight: 10}}
+          errorStyle={{color: 'red'}}
+          errorMessage="ENTER A VALID ERROR HERE"
+        />
+        {/* <Input
+          placeholder="INPUT WITH ERROR MESSAGE"
+          errorStyle={{color: 'red'}}
+          errorMessage="ENTER A VALID ERROR HERE"
+        /> */}
+        <View paddingVertical={10} />
+        <Button onPress={this.onPress} title="登入" type="outline" />
+        <Button onPress={this.onPress} title="註冊" type="clear" />
+        <Text onPress={() => console.log('1st')}>忘記密碼</Text>
       </View>
     );
   }
