@@ -8,9 +8,6 @@ export default class Login extends React.Component {
   state = {
     email: '',
   };
-  onPress = () => {
-    Actions.registered({user: '花的世界'});
-  };
   validate = text => {
     console.log(text);
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -47,8 +44,20 @@ export default class Login extends React.Component {
           errorMessage="ENTER A VALID ERROR HERE"
         /> */}
         <View paddingVertical={10} />
-        <Button onPress={this.onPress} title="登入" type="outline" />
-        <Button onPress={this.onPress} title="註冊" type="clear" />
+        <Button
+          onPress={() => {
+            Actions.tabbar({user: '花的世界'});
+          }}
+          title="登入"
+          type="outline"
+        />
+        <Button
+          onPress={() => {
+            Actions.registered({user: '花的世界'});
+          }}
+          title="註冊"
+          type="clear"
+        />
         <Text onPress={() => console.log('忘記密碼了ＱＱ')}>忘記密碼</Text>
       </View>
     );
