@@ -46,10 +46,6 @@ export default class Login extends React.Component {
           errorStyle={{color: 'red'}}
           errorMessage="ENTER A VALID ERROR HERE"
         /> */}
-        <View paddingVertical={10} />
-        <Button onPress={this.onPress} title="登入" type="outline" />
-        <Button onPress={this.onPress} title="註冊" type="clear" />
-        <Text onPress={() => console.log('忘記密碼了ＱＱ')}>忘記密碼</Text>
       </View>
     );
   }

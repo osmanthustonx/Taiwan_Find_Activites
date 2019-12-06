@@ -12,6 +12,7 @@ import ProfileIcon from '../components/ProfileIcon';
 import TabHome from '../screens/TabHome';
 import About from '../screens/About';
 import Login from '../screens/Login';
+import Registration from '../screens/Registration';
 import Activity from '../screens/Activity';
 import ActivityInfo from '../screens/ActivityInfo';
 import Restaurant from '../screens/Restaurant';
@@ -23,12 +24,16 @@ export default class Routes extends Component {
     return (
       <Router>
         <Stack key="root">
-          <Scene
-            key="login"
-            component={Login}
-            title="登入"
-            navigationBarStyle={{backgroundColor: 'skyblue'}}
-          />
+          <Stack hideNavBar={true}>
+            <Scene
+              hideNavBar={false}
+              key="login"
+              component={Login}
+              title="登入"
+              // navigationBarStyle={{backgroundColor: 'skyblue'}}
+            />
+            <Scene key="registered" component={Registration} title="註冊" />
+          </Stack>
           <Tabs
             hideNavBar={true}
             key="tabbar" // 在 Tabs 的 key(tabbar) 可以讓 login 完之後，可以透過 action.tabbar，讓你的應用切換到這個 tabbar 的場景當中
