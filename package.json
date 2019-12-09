@@ -8,6 +8,7 @@
     "ios": "npx react-native run-ios --simulator='iPhone 8'"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.6.3",
     "@react-native-community/datetimepicker": "^2.1.0",
     "moment": "^2.24.0",
     "react": "16.9.0",

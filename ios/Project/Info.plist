@@ -72,13 +72,10 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
-
 	<key>NSCalendarsUsageDescription</key>
-  <string>我們想存取您的行事曆</string>
-
+	<string>我們想存取您的行事曆</string>
 	<key>NSContactsUsageDescription</key>
-  <string>我們想存取您的聯絡</string>
-
+	<string>我們想存取您的聯絡</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>TFA would like access to your photo gallery</string>
 	<key>NSCameraUsageDescription</key>

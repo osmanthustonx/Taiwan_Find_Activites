@@ -35,9 +35,7 @@ target 'Project' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   # Point to the installed version
-  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker/RNDateTimePicker.podspec'
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   source 'https://github.com/CocoaPods/Specs.git'
   pod 'GoogleMaps'
@@ -47,6 +45,8 @@ target 'Project' do
   pod 'Permission-Calendars', :path => "#{permissions_path}/Calendars.podspec"
   pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts.podspec"
 
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   target 'ProjectTests' do
     inherit! :search_paths
