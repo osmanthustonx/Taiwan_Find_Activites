@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, Text, AsyncStorage} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Input, Button} from 'react-native-elements';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Login extends React.Component {
   state = {
@@ -43,17 +44,18 @@ export default class Login extends React.Component {
       password: this.state.password,
     });
     let xhr = new XMLHttpRequest();
-    xhr.addEventListener('readystatechange', async function() {
+    xhr.addEventListener('readystatechange', function() {
       if (this.readyState === 4) {
         if (this.responseText !== '登入失敗') {
-          let Id = await AsyncStorage.setItem(
-            'userID',
-            JSON.stringify(JSON.parse(this.responseText)[0].Id),
-          );
-          if (Id != null) {
-            console.log('好了');
-            Actions.tabbar();
-          }
+          let data = this.responseText;
+          (async function() {
+            try {
+              await AsyncStorage.setItem('userData', data);
+              await Actions.tabbar();
+            } catch (e) {
+              console.log(e);
+            }
+          })();
         } else {
           console.log(this.responseText);
         }
@@ -94,7 +96,27 @@ export default class Login extends React.Component {
         />
         <View paddingVertical={10} />
         <Button onPress={this.goLogin} title="登入" type="outline" />
-        <Button title="註冊" type="clear" />
+        <Button
+          onPress={() => {
+            Actions.registered();
+          }}
+          title="註冊"
+          type="clear"
+        />
+        <Button
+          onPress={async () => {
+            try {
+              const value = await AsyncStorage.getItem('userData');
+              console.log(value);
+              if (value !== null) {
+                // value previously stored
+              }
+            } catch (e) {
+              // error reading value
+            }
+          }}
+          title="測試"
+        />
         <Text onPress={() => console.log('忘記密碼了ＱＱ')}>忘記密碼</Text>
       </View>
     );
