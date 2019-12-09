@@ -108,27 +108,30 @@ export default class Login extends React.Component {
   /*------撈API資料------*/
 
   goRegist = () => {
-    let data = {
+    let data = JSON.stringify({
       Name: this.state.name,
       Email: this.state.email,
-      // Birth: moment(this.state.date).format('ll'),
-      Birth: '2000-01-02',
+      Birth: moment(this.state.date).format('ll'),
       Gender: this.state.gender,
       Password: this.state.password,
-    };
+    });
+
     let xhr = new XMLHttpRequest();
     // xhr.withCredentials = true;
 
     xhr.addEventListener('readystatechange', function() {
       if (this.readyState === 4) {
-        console.log(this.responseText);
-        console.log(JSON.stringify(data));
+        if (this.responseText === '成功') {
+          Actions.pop();
+        } else {
+          console.log(this.responseText);
+        }
       }
     });
 
     xhr.open('POST', 'https://tfa.rocket-coding.com/Member/AddMember');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send(JSON.stringify(data));
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(data);
   };
 
   test = () => {
@@ -206,7 +209,6 @@ export default class Login extends React.Component {
         <Button
           title="送出"
           onPress={() => {
-            // Actions.pop();
             this.goRegist();
             // this.test();
           }}
