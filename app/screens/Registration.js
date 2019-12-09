@@ -134,17 +134,6 @@ export default class Login extends React.Component {
     xhr.send(data);
   };
 
-  test = () => {
-    let data = {
-      Name: this.state.name,
-      Email: this.state.email,
-      Birth: moment(this.state.date).format('ll'),
-      Gender: this.state.gender,
-      Password: this.state.password,
-    };
-    console.log(data);
-  };
-
   render() {
     return (
       <View style={styles.container}>
