@@ -9,7 +9,9 @@ export default class Login extends React.Component {
   state = {
     email: '',
     password: '',
+    loading: false,
   };
+
   validate = text => {
     console.log(text);
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -39,6 +41,7 @@ export default class Login extends React.Component {
 
   /*------撈API資料------*/
   goLogin = () => {
+    Actions.tabbar();
     let data = JSON.stringify({
       userName: this.state.email,
       password: this.state.password,
@@ -51,7 +54,7 @@ export default class Login extends React.Component {
           (async function() {
             try {
               await AsyncStorage.setItem('userData', data);
-              await Actions.tabbar();
+              await Actions.tabbar(); //TODO
             } catch (e) {
               console.log(e);
             }
@@ -95,27 +98,18 @@ export default class Login extends React.Component {
           secureTextEntry={true}
         />
         <View paddingVertical={10} />
-        <Button onPress={this.goLogin} title="登入" type="outline" />
+        <Button
+          onPress={this.goLogin}
+          title="登入"
+          type="outline"
+          // loading={this.state.loading}
+        />
         <Button
           onPress={() => {
             Actions.registered();
           }}
           title="註冊"
           type="clear"
-        />
-        <Button
-          onPress={async () => {
-            try {
-              const value = await AsyncStorage.getItem('userData');
-              console.log(value);
-              if (value !== null) {
-                // value previously stored
-              }
-            } catch (e) {
-              // error reading value
-            }
-          }}
-          title="測試"
         />
         <Text onPress={() => console.log('忘記密碼了ＱＱ')}>忘記密碼</Text>
       </View>

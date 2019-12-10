@@ -58,12 +58,30 @@ export default class Activity extends React.Component {
     console.log(this.state.yestD);
   };
 
+  /*------地區下拉API------*/
+
+  async fetchdata() {
+    try {
+      let res = await fetch('https://tfa.rocket-coding.com/index/showcity');
+      let resJson = await res.json();
+      this.setState({
+        area: resJson,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  componentDidMount() {
+    this.fetchdata();
+  }
+
   render() {
     return (
       <View>
         <View style={styles.f_direction_row}>
           <RNPickerSelect
-            placeholder={{label: '選擇展覽館', value: null, color: '#9EA0A4'}}
+            placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}
             onValueChange={value => this.setState({exhibition: value})}
             items={[
               {label: '高雄展覽館', value: '高雄展覽館'},
@@ -136,10 +154,15 @@ export default class Activity extends React.Component {
               onChange={this.setDate}
             />
           )}
-          {/* <Button title={'確定'} onPress={this.unShow} type="outline" /> */}
         </View>
         <Text style={styles.welcome}>Welcome {this.props.title}</Text>
         <Button onPress={this.onPress} title="Go to About" />
+        <Button
+          onPress={() => {
+            console.log(this.state.area);
+          }}
+          title="test"
+        />
       </View>
     );
   }
