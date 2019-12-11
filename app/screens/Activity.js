@@ -18,33 +18,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
 
-const listData = [
-  {
-    title: 'Apple',
-    url:
-      'https://images.unsplash.com/photo-1465101162946-4377e57745c3?ixlib=rb-0.3.5&s=8afa11b380d228808390a0e64c395941&auto=format&fit=crop&w=2557&q=80',
-  },
-  {
-    title: 'Banana',
-    url:
-      'https://images.unsplash.com/photo-1483086431886-3590a88317fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bc3b9de92dde18a3b7a76da414f0975e&auto=format&fit=crop&w=934&q=80',
-  },
-  {
-    title: 'Cherry',
-    url:
-      'https://images.unsplash.com/photo-1504387103978-e4ee71416c38?ixlib=rb-0.3.5&s=e03bf50e379a0b963cfe29233c31c03d&auto=format&fit=crop&w=934&q=80',
-  },
-  {
-    title: 'Grape',
-    url:
-      'https://images.unsplash.com/photo-1467173572719-f14b9fb86e5f?ixlib=rb-0.3.5&s=32915bf266ac28dc51612baa805d06c0&auto=format&fit=crop&w=2551&q=80',
-  },
-  {
-    title: 'Orange',
-    url:
-      'https://images.unsplash.com/photo-1491466424936-e304919aada7?ixlib=rb-0.3.5&s=f03c295f3183e3a209480e2d0b8129a9&auto=format&fit=crop&w=2549&q=80',
-  },
-];
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Activity extends React.Component {
   onPress = () => {
@@ -56,7 +30,6 @@ export default class Activity extends React.Component {
     selectDate: '按我選擇日期',
     nextD: 0,
     yestD: 0,
-    listData: listData,
     refreshing: false,
     area: [],
     buildingDataSource: [],
@@ -143,6 +116,7 @@ export default class Activity extends React.Component {
       },
       body: JSON.stringify(data),
     };
+
     try {
       let res = await fetch(
         'https://tfa.rocket-coding.com/index/showdata',
@@ -151,6 +125,7 @@ export default class Activity extends React.Component {
       let resJson = await res.json();
       this.setState({
         fairData: resJson,
+        refreshing: false,
       });
     } catch (error) {
       console.log(error);
@@ -175,6 +150,17 @@ export default class Activity extends React.Component {
         <View style={styles.info}>
           <Text>{item.Name}</Text>
           <Text>{item.Place}</Text>
+          <Text
+            onPress={() => {
+              this.addFavorit(item.Id);
+              item.Name = '測試'; // 要新增欄位
+              console.log(item);
+            }}>
+            <Icon name="ios-heart-empty" size={20} />
+          </Text>
+          <Text onPress={() => {}}>
+            <Icon name="ios-navigate" size={20} />
+          </Text>
         </View>
       </View>
     );
@@ -182,27 +168,52 @@ export default class Activity extends React.Component {
 
   _keyExtractor = (item, index) => String(item.Id);
 
-  // _onEndReached = () => {
-  //   console.log('onEndReached');
-  //   this.setState(prevState => ({
-  //     listData: [
-  //       ...prevState.listData,
-  //       {
-  //         title: 'New Item',
-  //         url:
-  //           'https://images.unsplash.com/photo-1495277493816-4c359911b7f1?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=cea505d70dc1770c4dd470ff9715ac36&auto=format&fit=crop&w=2246&q=80',
-  //       },
-  //     ],
-  //   }));
-  // };
-
-  _onRefresh = () => {
+  _onRefresh = async () => {
     console.log('onRefresh');
     this.setState({refreshing: true});
-    setTimeout(() => {
-      this.setState({refreshing: false});
-    }, 2000);
+    await this.getFairData(this.state.place, this.state.city);
   };
+
+  /*------我的最愛API------*/
+  async addFavorit(EId) {
+    let userData = JSON.parse(await AsyncStorage.getItem('userData'));
+    // var data = JSON.stringify({
+    //   MId: userData.Id,
+    //   EId,
+    // });
+    // let opts = {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: data,
+    // };
+    // try {
+    //   let res = await fetch(
+    //     'https://tfa.rocket-coding.com/Index/AddFavorite',
+    //     opts,
+    //   );
+    //   let resJson = await JSON.parse(res);
+    //   // console.log(resJson);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    /*--------------------------------*/
+    var data = JSON.stringify({
+      MId: userData.Id,
+      EId,
+    });
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.addEventListener('readystatechange', function() {
+      if (this.readyState === 4) {
+        console.log(this.responseText);
+      }
+    });
+    xhr.open('POST', 'https://tfa.rocket-coding.com/Index/AddFavorite');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(data);
+  }
 
   render() {
     return (
@@ -286,7 +297,6 @@ export default class Activity extends React.Component {
           <Button
             onPress={() => {
               this.getFairData(this.state.place, this.state.city);
-              console.log(this.state.date);
             }}
             title="Go to About"
           />
@@ -295,7 +305,6 @@ export default class Activity extends React.Component {
           keyExtractor={this._keyExtractor}
           data={this.state.fairData}
           renderItem={this._renderItem}
-          // onEndReached={this._onEndReached}
           onEndReachedThreshold={0.2}
           onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
