@@ -45,13 +45,18 @@ export default class Routes extends Component {
               tabBarLabel="活動"
               icon={ActivityIcon}
               titleStyle={styles.titleStyle}
-              keyPrefix="tab1"
-              navigationBarStyle={{backgroundColor: 'pink'}}>
-              <Scene key="activity" component={Activity} title="最新活動" />
+              keyPrefix="tab1">
+              <Scene
+                key="activity"
+                component={Activity}
+                title="最新活動"
+                titleStyle={{color: 'black'}}
+              />
               <Scene
                 key="activityInfo"
                 component={ActivityInfo}
                 title="活動名稱"
+                titleStyle={{color: 'black'}}
               />
             </Stack>
             <Stack
@@ -59,9 +64,13 @@ export default class Routes extends Component {
               tabBarLabel="附近美食"
               icon={RestaurantIcon}
               titleStyle={styles.titleStyle}
-              keyPrefix="tab2"
-              navigationBarStyle={{backgroundColor: 'orange'}}>
-              <Scene key="restaurant" component={Restaurant} title="附近美食" />
+              keyPrefix="tab2">
+              <Scene
+                key="restaurant"
+                component={Restaurant}
+                title="附近美食"
+                titleStyle={{color: 'black'}}
+              />
             </Stack>
             <Stack
               key="tab3"
@@ -69,11 +78,17 @@ export default class Routes extends Component {
               icon={FavoriteIcon}
               titleStyle={styles.titleStyle}
               keyPrefix="tab3">
-              <Scene key="favorite" component={Favorite} title="我的收藏" />
+              <Scene
+                key="favorite"
+                component={Favorite}
+                title="我的收藏"
+                titleStyle={{color: 'black'}}
+              />
               <Scene
                 key="activityInfo"
                 component={ActivityInfo}
                 title="活動名稱"
+                titleStyle={{color: 'black'}}
               />
             </Stack>
             <Stack
@@ -81,9 +96,13 @@ export default class Routes extends Component {
               tabBarLabel="個人頁面"
               icon={ProfileIcon}
               titleStyle={styles.titleStyle}
-              keyPrefix="tab4"
-              navigationBarStyle={{backgroundColor: 'green'}}>
-              <Scene key="profile" component={Profile} title="個人頁面" />
+              keyPrefix="tab4">
+              <Scene
+                key="profile"
+                component={Profile}
+                title="個人頁面"
+                titleStyle={{color: 'black'}}
+              />
             </Stack>
           </Tabs>
         </Stack>

@@ -111,12 +111,12 @@ export default class Login extends React.Component {
           type="clear"
         />
         <Text onPress={() => console.log('忘記密碼了ＱＱ')}>忘記密碼</Text>
-        <Button
+        {/* <Button
           title="Click me"
           onPress={() => {
             Linking.openURL('https://google.com');
           }}
-        />
+        /> */}
       </View>
     );
   }
@@ -127,7 +127,7 @@ var styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    // backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 20,

@@ -16,7 +16,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import {Input, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-// import 'moment/locale/zh-tw';
+import 'moment/locale/zh-tw';
 
 const listData = [
   {
@@ -61,6 +61,9 @@ export default class Activity extends React.Component {
     area: [],
     buildingDataSource: [],
     selectAreaBuilding: [],
+    fairData: [],
+    place: '',
+    city: '',
   };
 
   setDate = (event, date) => {
@@ -95,7 +98,7 @@ export default class Activity extends React.Component {
 
   /*------地區下拉API------*/
 
-  async fetchdata() {
+  async getSelectData() {
     try {
       let res = await fetch('https://tfa.rocket-coding.com/index/showcity');
       let resJson = await res.json();
@@ -116,10 +119,6 @@ export default class Activity extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.fetchdata();
-  }
-
   filteData = data => {
     let aimData = this.state.buildingDataSource.filter(item => {
       return data === item.city;
@@ -129,41 +128,59 @@ export default class Activity extends React.Component {
     });
   };
 
+  /*------展覽內容API------*/
+
+  async getFairData(place = '', city = '', date = this.state.date) {
+    let data = {
+      place,
+      city,
+      date,
+    };
+    let opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      let res = await fetch(
+        'https://tfa.rocket-coding.com/index/showdata',
+        opts,
+      );
+      let resJson = await res.json();
+      this.setState({
+        fairData: resJson,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  componentDidMount() {
+    this.getSelectData();
+    this.getFairData();
+  }
+
   /*------FlastList------*/
   _renderItem = ({item}) => {
     return (
       <View>
-        {/* <TouchableOpacity
-          onPress={this.onPress}
-          activeOpacity={0.3}
-          style={styles.listItem}>
-          <View>
-            <Image source={{uri: item.url}} style={styles.image} />
-          </View>
-        </TouchableOpacity> */}
         <TouchableOpacity onPress={this.onPress}>
           <View style={{alignItems: 'center'}}>
-            <Image
-              source={{
-                uri:
-                  'https://jp.alibabanews.com/wp-content/themes/alibabanews/assets/images/temp/images/others/up-arrow.png',
-              }}
-              style={styles.image}
-            />
+            <Image source={{uri: item.Image}} style={styles.image} />
             <Text style={styles.label}>Press Me</Text>
           </View>
         </TouchableOpacity>
-        {/* <Image source={{uri: item.url}} style={styles.image} /> */}
-        {/* <Text style={styles.title}>{item.title}</Text> */}
         <View style={styles.info}>
-          <Text>{'我是展覽名稱'}</Text>
-          <Text>{'我是展覽日期'}</Text>
+          <Text>{item.Name}</Text>
+          <Text>{item.Place}</Text>
         </View>
       </View>
     );
   };
 
-  _keyExtractor = (item, index) => item.title;
+  _keyExtractor = (item, index) => String(item.Id);
 
   // _onEndReached = () => {
   //   console.log('onEndReached');
@@ -195,6 +212,7 @@ export default class Activity extends React.Component {
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}
             onValueChange={value => {
               this.filteData(value);
+              this.setState({city: value});
             }}
             items={this.state.area}
             style={{
@@ -210,7 +228,7 @@ export default class Activity extends React.Component {
           />
           <RNPickerSelect
             placeholder={{label: '選擇展覽館', value: null, color: '#9EA0A4'}}
-            onValueChange={value => this.setState({exhibition: value})}
+            onValueChange={value => this.setState({place: value})}
             items={
               this.state.selectAreaBuilding.length !== 0
                 ? this.state.selectAreaBuilding
@@ -264,21 +282,31 @@ export default class Activity extends React.Component {
             />
           )}
         </View>
+        <View>
+          <Button
+            onPress={() => {
+              this.getFairData(this.state.place, this.state.city);
+              console.log(this.state.date);
+            }}
+            title="Go to About"
+          />
+        </View>
         <FlatList
           keyExtractor={this._keyExtractor}
-          data={this.state.listData}
+          data={this.state.fairData}
           renderItem={this._renderItem}
           // onEndReached={this._onEndReached}
           onEndReachedThreshold={0.2}
           onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
         />
-        {/* <Button onPress={this.onPress} title="Go to About" />
-        <Button
+        {/* <Button onPress={this.onPress} title="Go to About" /> */}
+        {/* <Button
           onPress={() => {
-            console.log(this.state.area);
+            this.getFairData(this.state.place, this.state.city);
+            console.log(this.state.fairData);
           }}
-          title="test"
+          title="Go to About"
         /> */}
       </View>
     );
@@ -326,7 +354,7 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 3,
   },
-  info: {backgroundColor: 'orange', width: width, height: 300},
+  info: {backgroundColor: '#cccccc', width: width, height: 300},
 });
 
 const pickerSelectStyles = StyleSheet.create({
