@@ -6,6 +6,8 @@ import {
   FlatList,
   Dimensions,
   Platform,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 
@@ -15,6 +17,34 @@ import {Input, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 // import 'moment/locale/zh-tw';
+
+const listData = [
+  {
+    title: 'Apple',
+    url:
+      'https://images.unsplash.com/photo-1465101162946-4377e57745c3?ixlib=rb-0.3.5&s=8afa11b380d228808390a0e64c395941&auto=format&fit=crop&w=2557&q=80',
+  },
+  {
+    title: 'Banana',
+    url:
+      'https://images.unsplash.com/photo-1483086431886-3590a88317fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bc3b9de92dde18a3b7a76da414f0975e&auto=format&fit=crop&w=934&q=80',
+  },
+  {
+    title: 'Cherry',
+    url:
+      'https://images.unsplash.com/photo-1504387103978-e4ee71416c38?ixlib=rb-0.3.5&s=e03bf50e379a0b963cfe29233c31c03d&auto=format&fit=crop&w=934&q=80',
+  },
+  {
+    title: 'Grape',
+    url:
+      'https://images.unsplash.com/photo-1467173572719-f14b9fb86e5f?ixlib=rb-0.3.5&s=32915bf266ac28dc51612baa805d06c0&auto=format&fit=crop&w=2551&q=80',
+  },
+  {
+    title: 'Orange',
+    url:
+      'https://images.unsplash.com/photo-1491466424936-e304919aada7?ixlib=rb-0.3.5&s=f03c295f3183e3a209480e2d0b8129a9&auto=format&fit=crop&w=2549&q=80',
+  },
+];
 
 export default class Activity extends React.Component {
   onPress = () => {
@@ -26,6 +56,11 @@ export default class Activity extends React.Component {
     selectDate: '按我選擇日期',
     nextD: 0,
     yestD: 0,
+    listData: listData,
+    refreshing: false,
+    area: [],
+    buildingDataSource: [],
+    selectAreaBuilding: [],
   };
 
   setDate = (event, date) => {
@@ -70,11 +105,87 @@ export default class Activity extends React.Component {
     } catch (error) {
       console.log(error);
     }
+    try {
+      let res = await fetch('https://tfa.rocket-coding.com/index/showplace');
+      let resJson = await res.json();
+      this.setState({
+        buildingDataSource: resJson,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   componentDidMount() {
     this.fetchdata();
   }
+
+  filteData = data => {
+    let aimData = this.state.buildingDataSource.filter(item => {
+      return data === item.city;
+    });
+    this.setState({
+      selectAreaBuilding: aimData,
+    });
+  };
+
+  /*------FlastList------*/
+  _renderItem = ({item}) => {
+    return (
+      <View>
+        {/* <TouchableOpacity
+          onPress={this.onPress}
+          activeOpacity={0.3}
+          style={styles.listItem}>
+          <View>
+            <Image source={{uri: item.url}} style={styles.image} />
+          </View>
+        </TouchableOpacity> */}
+        <TouchableOpacity onPress={this.onPress}>
+          <View style={{alignItems: 'center'}}>
+            <Image
+              source={{
+                uri:
+                  'https://jp.alibabanews.com/wp-content/themes/alibabanews/assets/images/temp/images/others/up-arrow.png',
+              }}
+              style={styles.image}
+            />
+            <Text style={styles.label}>Press Me</Text>
+          </View>
+        </TouchableOpacity>
+        {/* <Image source={{uri: item.url}} style={styles.image} /> */}
+        {/* <Text style={styles.title}>{item.title}</Text> */}
+        <View style={styles.info}>
+          <Text>{'我是展覽名稱'}</Text>
+          <Text>{'我是展覽日期'}</Text>
+        </View>
+      </View>
+    );
+  };
+
+  _keyExtractor = (item, index) => item.title;
+
+  // _onEndReached = () => {
+  //   console.log('onEndReached');
+  //   this.setState(prevState => ({
+  //     listData: [
+  //       ...prevState.listData,
+  //       {
+  //         title: 'New Item',
+  //         url:
+  //           'https://images.unsplash.com/photo-1495277493816-4c359911b7f1?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=cea505d70dc1770c4dd470ff9715ac36&auto=format&fit=crop&w=2246&q=80',
+  //       },
+  //     ],
+  //   }));
+  // };
+
+  _onRefresh = () => {
+    console.log('onRefresh');
+    this.setState({refreshing: true});
+    setTimeout(() => {
+      this.setState({refreshing: false});
+    }, 2000);
+  };
 
   render() {
     return (
@@ -82,12 +193,10 @@ export default class Activity extends React.Component {
         <View style={styles.f_direction_row}>
           <RNPickerSelect
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}
-            onValueChange={value => this.setState({exhibition: value})}
-            items={[
-              {label: '高雄展覽館', value: '高雄展覽館'},
-              {label: '駁二', value: '駁二'},
-              {label: '奇美美術館', value: '奇美美術館'},
-            ]}
+            onValueChange={value => {
+              this.filteData(value);
+            }}
+            items={this.state.area}
             style={{
               ...pickerSelectStyles,
               iconContainer: {
@@ -102,11 +211,11 @@ export default class Activity extends React.Component {
           <RNPickerSelect
             placeholder={{label: '選擇展覽館', value: null, color: '#9EA0A4'}}
             onValueChange={value => this.setState({exhibition: value})}
-            items={[
-              {label: '高雄展覽館', value: '高雄展覽館'},
-              {label: '駁二', value: '駁二'},
-              {label: '奇美美術館', value: '奇美美術館'},
-            ]}
+            items={
+              this.state.selectAreaBuilding.length !== 0
+                ? this.state.selectAreaBuilding
+                : this.state.buildingDataSource
+            }
             style={{
               ...pickerSelectStyles,
               iconContainer: {
@@ -155,19 +264,29 @@ export default class Activity extends React.Component {
             />
           )}
         </View>
-        <Text style={styles.welcome}>Welcome {this.props.title}</Text>
-        <Button onPress={this.onPress} title="Go to About" />
+        <FlatList
+          keyExtractor={this._keyExtractor}
+          data={this.state.listData}
+          renderItem={this._renderItem}
+          // onEndReached={this._onEndReached}
+          onEndReachedThreshold={0.2}
+          onRefresh={this._onRefresh}
+          refreshing={this.state.refreshing}
+        />
+        {/* <Button onPress={this.onPress} title="Go to About" />
         <Button
           onPress={() => {
             console.log(this.state.area);
           }}
           title="test"
-        />
+        /> */}
       </View>
     );
   }
 }
 
+var width = Dimensions.get('window').width;
+var height = Dimensions.get('window').height;
 var styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -188,9 +307,28 @@ var styles = StyleSheet.create({
   f_direction_row: {
     flexDirection: 'row',
   },
+
+  listItem: {
+    height: height - 200,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    // marginBottom: 10,
+  },
+  image: {
+    // position: 'absolute',
+    width: '100%',
+    height: 300,
+  },
+  title: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: '#FFF',
+    textAlign: 'center',
+    letterSpacing: 3,
+  },
+  info: {backgroundColor: 'orange', width: width, height: 300},
 });
 
-var width = Dimensions.get('window').width;
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     textAlign: 'center',

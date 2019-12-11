@@ -9,18 +9,58 @@ export default class Activity extends React.Component {
   onPress = () => {
     Actions.activityInfo({user: '花的世界'});
   };
+
+  state = {
+    area: [],
+    buildingDataSource: [],
+    selectAreaBuilding: [],
+  };
+
+  /*------地區下拉API------*/
+
+  async fetchdata() {
+    try {
+      let res = await fetch('https://tfa.rocket-coding.com/index/showcity');
+      let resJson = await res.json();
+      this.setState({
+        area: resJson,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      let res = await fetch('https://tfa.rocket-coding.com/index/showplace');
+      let resJson = await res.json();
+      this.setState({
+        buildingDataSource: resJson,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  componentDidMount() {
+    this.fetchdata();
+  }
+
+  filteData = data => {
+    let aimData = this.state.buildingDataSource.filter(item => {
+      return data === item.city;
+    });
+    this.setState({
+      selectAreaBuilding: aimData,
+    });
+  };
   render() {
     return (
       <View>
         <View style={styles.f_direction_row}>
           <RNPickerSelect
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}
-            onValueChange={value => this.setState({exhibition: value})}
-            items={[
-              {label: '高雄展覽館', value: '高雄展覽館'},
-              {label: '駁二', value: '駁二'},
-              {label: '奇美美術館', value: '奇美美術館'},
-            ]}
+            onValueChange={value => {
+              this.filteData(value);
+            }}
+            items={this.state.area}
             style={{
               ...pickerSelectStyles,
               iconContainer: {
@@ -35,11 +75,11 @@ export default class Activity extends React.Component {
           <RNPickerSelect
             placeholder={{label: '選擇展覽館', value: null, color: '#9EA0A4'}}
             onValueChange={value => this.setState({exhibition: value})}
-            items={[
-              {label: '高雄展覽館', value: '高雄展覽館'},
-              {label: '駁二', value: '駁二'},
-              {label: '奇美美術館', value: '奇美美術館'},
-            ]}
+            items={
+              this.state.selectAreaBuilding.length !== 0
+                ? this.state.selectAreaBuilding
+                : this.state.buildingDataSource
+            }
             style={{
               ...pickerSelectStyles,
               iconContainer: {

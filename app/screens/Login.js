@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Linking} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Input, Button} from 'react-native-elements';
@@ -41,7 +41,6 @@ export default class Login extends React.Component {
 
   /*------撈API資料------*/
   goLogin = () => {
-    Actions.tabbar();
     let data = JSON.stringify({
       userName: this.state.email,
       password: this.state.password,
@@ -54,7 +53,7 @@ export default class Login extends React.Component {
           (async function() {
             try {
               await AsyncStorage.setItem('userData', data);
-              await Actions.tabbar(); //TODO
+              await Actions.tabbar();
             } catch (e) {
               console.log(e);
             }
@@ -112,6 +111,12 @@ export default class Login extends React.Component {
           type="clear"
         />
         <Text onPress={() => console.log('忘記密碼了ＱＱ')}>忘記密碼</Text>
+        <Button
+          title="Click me"
+          onPress={() => {
+            Linking.openURL('https://google.com');
+          }}
+        />
       </View>
     );
   }
