@@ -84,5 +84,9 @@
 	<string>TFA would like to save photos to your photo gallery</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>TFA would like to use your microphone (for videos)</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>需要存取您的位置</string>
+  <key>NSLocationAlwaysUsageDescription</key>
+  <string>需要存取您的位置</string>
 </dict>
 </plist>

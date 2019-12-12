@@ -30,6 +30,10 @@ PODS:
     - RNPermissions
   - Permission-Contacts (2.0.5):
     - RNPermissions
+  - Permission-LocationAlways (2.0.5):
+    - RNPermissions
+  - Permission-LocationWhenInUse (2.0.5):
+    - RNPermissions
   - RCTRequired (0.61.5)
   - RCTTypeSafety (0.61.5):
     - FBLazyVector (= 0.61.5)
@@ -195,6 +199,8 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-add-calendar-event (3.0.0):
     - React
+  - react-native-geolocation (2.0.2):
+    - React
   - react-native-image-picker (1.1.0):
     - React
   - React-RCTActionSheet (0.61.5):
@@ -252,6 +258,8 @@ DEPENDENCIES:
   - GooglePlaces
   - Permission-Calendars (from `../node_modules/react-native-permissions/ios/Calendars.podspec`)
   - Permission-Contacts (from `../node_modules/react-native-permissions/ios/Contacts.podspec`)
+  - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways.podspec`)
+  - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -264,6 +272,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-add-calendar-event (from `../node_modules/react-native-add-calendar-event`)
+  - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -304,6 +313,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-permissions/ios/Calendars.podspec"
   Permission-Contacts:
     :path: "../node_modules/react-native-permissions/ios/Contacts.podspec"
+  Permission-LocationAlways:
+    :path: "../node_modules/react-native-permissions/ios/LocationAlways.podspec"
+  Permission-LocationWhenInUse:
+    :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse.podspec"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -324,6 +337,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-add-calendar-event:
     :path: "../node_modules/react-native-add-calendar-event"
+  react-native-geolocation:
+    :path: "../node_modules/@react-native-community/geolocation"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   React-RCTActionSheet:
@@ -368,6 +383,8 @@ SPEC CHECKSUMS:
   GooglePlaces: e874db179f2675c4f3eeda0b686b540273a578b0
   Permission-Calendars: 2c8fa76bb3f7831060d2d06b05dd4a5d8d59f81e
   Permission-Contacts: f74a222974480b3b19c08ae9d83738eb8ddf2646
+  Permission-LocationAlways: 836ee1347e106fdce1012ed2c5fbe81ca1da4f3f
+  Permission-LocationWhenInUse: 93b1987786b9674d4683cbeaee9a3e584ddf7791
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
@@ -378,6 +395,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-add-calendar-event: 46b0ff5b4c9c7cb46e790ea25afb8ba430286d70
+  react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-image-picker: 7a85cf7b0a53845f03ae52fb4592a2748ded069b
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
@@ -395,6 +413,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 5c40d276240c18f05235fc37e9440240612a2719
+PODFILE CHECKSUM: 4f387b8e352a682470e9532d6ad78d674e1fbe53
 
 COCOAPODS: 1.8.4

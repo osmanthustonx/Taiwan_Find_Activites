@@ -10,6 +10,7 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.3",
     "@react-native-community/datetimepicker": "^2.1.0",
+    "@react-native-community/geolocation": "^2.0.2",
     "moment": "^2.24.0",
     "react": "16.9.0",
     "react-native": "0.61.5",

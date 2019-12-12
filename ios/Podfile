@@ -44,6 +44,8 @@ target 'Project' do
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-Calendars', :path => "#{permissions_path}/Calendars.podspec"
   pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts.podspec"
+  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways.podspec"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse.podspec"
 
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'

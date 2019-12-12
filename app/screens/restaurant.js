@@ -13,6 +13,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import {Input, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Popup, showLocation} from 'react-native-map-link';
+import Geolocation from '@react-native-community/geolocation';
 
 export default class Activity extends React.Component {
   onPress = () => {
@@ -27,6 +28,7 @@ export default class Activity extends React.Component {
     restaurantData: [],
     exhibitionLat: '',
     exhibitionLng: '',
+    currentCoordinate: {},
   };
 
   /*------地區下拉API------*/
@@ -63,11 +65,12 @@ export default class Activity extends React.Component {
 
   /*------餐廳內容API------*/
 
-  async getRestaurantData() {
+  async getRestaurantData(lng, lat) {
     let data = {
-      lng: 120.2335416,
-      lat: 23.0586956,
+      lng,
+      lat,
     };
+    console.log(data);
     let opts = {
       method: 'POST',
       headers: {
@@ -101,15 +104,25 @@ export default class Activity extends React.Component {
     });
   }
 
+  componentWillMount() {
+    Geolocation.getCurrentPosition(info => {
+      this.setState({
+        currentCoordinate: {
+          lat: info.latitude,
+          lng: info.longitude,
+        },
+      });
+    });
+  }
+
   componentDidMount() {
     this.getSelectData();
-    this.getRestaurantData();
+    // this.getRestaurantData();
   }
 
   /*------Flatlist------*/
 
   _renderItem = ({item}) => {
-    console.log(item);
     return (
       <View>
         <TouchableOpacity onPress={this.onPress}>
@@ -191,6 +204,17 @@ export default class Activity extends React.Component {
             }}
             Icon={() => {
               return <Icon name="md-arrow-down" size={24} color="gray" />;
+            }}
+          />
+        </View>
+        <View>
+          <Button
+            title="test"
+            onPress={() => {
+              this.getRestaurantData(
+                this.state.exhibitionLng,
+                this.state.exhibitionLat,
+              );
             }}
           />
         </View>
