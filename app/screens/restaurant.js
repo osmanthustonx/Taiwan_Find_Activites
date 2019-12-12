@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import RNPickerSelect from 'react-native-picker-select';
@@ -24,11 +25,9 @@ export default class Activity extends React.Component {
     area: [],
     buildingDataSource: [],
     selectAreaBuilding: [],
-    refreshing: false,
     restaurantData: [],
     exhibitionLat: '',
     exhibitionLng: '',
-    currentCoordinate: {},
   };
 
   /*------地區下拉API------*/
@@ -65,12 +64,11 @@ export default class Activity extends React.Component {
 
   /*------餐廳內容API------*/
 
-  async getRestaurantData(lng, lat) {
+  async getRestaurantData(lat, lng) {
     let data = {
-      lng,
-      lat,
+      lng: lng.toString(),
+      lat: lat.toString(),
     };
-    console.log(data);
     let opts = {
       method: 'POST',
       headers: {
@@ -78,7 +76,6 @@ export default class Activity extends React.Component {
       },
       body: JSON.stringify(data),
     };
-
     try {
       let res = await fetch(
         'https://tfa.rocket-coding.com/FoodData/PlaceNearFood',
@@ -102,22 +99,27 @@ export default class Activity extends React.Component {
       exhibitionLat: data.lat,
       exhibitionLng: data.lng,
     });
+    this.getRestaurantData(data.lat, data.lng);
   }
 
-  componentWillMount() {
-    Geolocation.getCurrentPosition(info => {
-      this.setState({
-        currentCoordinate: {
-          lat: info.latitude,
-          lng: info.longitude,
-        },
-      });
-    });
+  locateCurrentPosition() {
+    Geolocation.getCurrentPosition(
+      position => {
+        this.getRestaurantData(
+          position.coords.latitude,
+          position.coords.longitude,
+        );
+      },
+      error => Alert.alert(error.message),
+      {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000},
+    );
   }
+
+  UNSAFE_componentWillMount() {}
 
   componentDidMount() {
     this.getSelectData();
-    // this.getRestaurantData();
+    this.locateCurrentPosition();
   }
 
   /*------Flatlist------*/
@@ -141,11 +143,12 @@ export default class Activity extends React.Component {
           <Text>{item.Place}</Text>
           <Text>{item.optime}</Text>
           <Text>{item.tel}</Text>
+          <Text>{item.DisView}</Text>
           <Text
             onPress={() =>
               showLocation({
-                latitude: item.Latitude,
-                longitude: item.Longitude,
+                latitude: item.lat,
+                longitude: item.lng,
                 title: item.Name,
               })
             }>
@@ -158,11 +161,6 @@ export default class Activity extends React.Component {
 
   _keyExtractor = (item, index) => String(item.Id);
 
-  // _onRefresh = async () => {
-  //   console.log('onRefresh');
-  //   this.setState({refreshing: true});
-  //   await this.getRestaurantData(); //TODO
-  // };
   render() {
     return (
       <View>
@@ -187,7 +185,6 @@ export default class Activity extends React.Component {
           <RNPickerSelect
             placeholder={{label: '選擇展覽館', value: null, color: '#9EA0A4'}}
             onValueChange={value => {
-              // this.restaurantFilleter(value);
               this.getExhibitionData(value);
             }}
             items={
@@ -207,24 +204,11 @@ export default class Activity extends React.Component {
             }}
           />
         </View>
-        <View>
-          <Button
-            title="test"
-            onPress={() => {
-              this.getRestaurantData(
-                this.state.exhibitionLng,
-                this.state.exhibitionLat,
-              );
-            }}
-          />
-        </View>
         <FlatList
           keyExtractor={this._keyExtractor}
           data={this.state.restaurantData}
           renderItem={this._renderItem}
           onEndReachedThreshold={0.2}
-          onRefresh={this._onRefresh}
-          refreshing={this.state.refreshing}
         />
       </View>
     );
