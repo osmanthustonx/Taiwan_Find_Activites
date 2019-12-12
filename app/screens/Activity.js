@@ -17,8 +17,17 @@ import {Input, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
-
 import AsyncStorage from '@react-native-community/async-storage';
+import {Popup, showLocation} from 'react-native-map-link';
+
+const options = {
+  latitude: 38.8976763,
+  longitude: -77.0387185,
+  title: 'The White House',
+  dialogTitle: 'This is the dialog Title',
+  dialogMessage: 'This is the amazing dialog Message',
+  cancelText: 'This is the cancel button text',
+};
 
 export default class Activity extends React.Component {
   onPress = () => {
@@ -158,7 +167,14 @@ export default class Activity extends React.Component {
             }}>
             <Icon name="ios-heart-empty" size={20} />
           </Text>
-          <Text onPress={() => {}}>
+          <Text
+            onPress={() =>
+              showLocation({
+                latitude: item.Latitude,
+                longitude: item.Longitude,
+                title: item.Name,
+              })
+            }>
             <Icon name="ios-navigate" size={20} />
           </Text>
         </View>
