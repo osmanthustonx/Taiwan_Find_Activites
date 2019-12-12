@@ -20,15 +20,6 @@ import 'moment/locale/zh-tw';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Popup, showLocation} from 'react-native-map-link';
 
-const options = {
-  latitude: 38.8976763,
-  longitude: -77.0387185,
-  title: 'The White House',
-  dialogTitle: 'This is the dialog Title',
-  dialogMessage: 'This is the amazing dialog Message',
-  cancelText: 'This is the cancel button text',
-};
-
 export default class Activity extends React.Component {
   onPress = () => {
     Actions.activityInfo({user: '花的世界'});
@@ -113,10 +104,12 @@ export default class Activity extends React.Component {
   /*------展覽內容API------*/
 
   async getFairData(place = '', city = '', date = this.state.date) {
+    let userData = JSON.parse(await AsyncStorage.getItem('userData'));
     let data = {
       place,
       city,
       date,
+      MemberID: userData.Id,
     };
     let opts = {
       method: 'POST',
@@ -159,6 +152,7 @@ export default class Activity extends React.Component {
         <View style={styles.info}>
           <Text>{item.Name}</Text>
           <Text>{item.Place}</Text>
+          <Text>{item.StartDate + '~' + item.EndDate}</Text>
           <Text
             onPress={() => {
               this.addFavorit(item.Id);
@@ -309,14 +303,6 @@ export default class Activity extends React.Component {
             />
           )}
         </View>
-        <View>
-          <Button
-            onPress={() => {
-              this.getFairData(this.state.place, this.state.city);
-            }}
-            title="Go to About"
-          />
-        </View>
         <FlatList
           keyExtractor={this._keyExtractor}
           data={this.state.fairData}
@@ -328,7 +314,6 @@ export default class Activity extends React.Component {
         {/* <Button onPress={this.onPress} title="Go to About" /> */}
         {/* <Button
           onPress={() => {
-            this.getFairData(this.state.place, this.state.city);
             console.log(this.state.fairData);
           }}
           title="Go to About"

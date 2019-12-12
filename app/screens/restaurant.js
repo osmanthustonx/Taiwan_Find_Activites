@@ -1,9 +1,18 @@
 import React from 'react';
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import RNPickerSelect from 'react-native-picker-select';
 import {Input, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {Popup, showLocation} from 'react-native-map-link';
 
 export default class Activity extends React.Component {
   onPress = () => {
@@ -14,11 +23,15 @@ export default class Activity extends React.Component {
     area: [],
     buildingDataSource: [],
     selectAreaBuilding: [],
+    refreshing: false,
+    restaurantData: [],
+    exhibitionLat: '',
+    exhibitionLng: '',
   };
 
   /*------地區下拉API------*/
 
-  async fetchdata() {
+  async getSelectData() {
     try {
       let res = await fetch('https://tfa.rocket-coding.com/index/showcity');
       let resJson = await res.json();
@@ -39,10 +52,6 @@ export default class Activity extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.fetchdata();
-  }
-
   filteData = data => {
     let aimData = this.state.buildingDataSource.filter(item => {
       return data === item.city;
@@ -51,6 +60,96 @@ export default class Activity extends React.Component {
       selectAreaBuilding: aimData,
     });
   };
+
+  /*------餐廳內容API------*/
+
+  async getRestaurantData() {
+    let data = {
+      lng: 120.2335416,
+      lat: 23.0586956,
+    };
+    let opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+
+    try {
+      let res = await fetch(
+        'https://tfa.rocket-coding.com/FoodData/PlaceNearFood',
+        opts,
+      );
+      let resJson = await res.json();
+      this.setState({
+        restaurantData: resJson,
+        refreshing: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getExhibitionData(exhibition) {
+    let data = this.state.buildingDataSource.find(item => {
+      return exhibition === item.label;
+    });
+    this.setState({
+      exhibitionLat: data.lat,
+      exhibitionLng: data.lng,
+    });
+  }
+
+  componentDidMount() {
+    this.getSelectData();
+    this.getRestaurantData();
+  }
+
+  /*------Flatlist------*/
+
+  _renderItem = ({item}) => {
+    console.log(item);
+    return (
+      <View>
+        <TouchableOpacity onPress={this.onPress}>
+          <View style={{alignItems: 'center'}}>
+            <Image
+              source={{
+                uri: item.Photo,
+              }}
+              style={styles.image}
+            />
+            <Text style={styles.label}>Press Me</Text>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.info}>
+          <Text>{item.Name}</Text>
+          <Text>{item.Place}</Text>
+          <Text>{item.optime}</Text>
+          <Text>{item.tel}</Text>
+          <Text
+            onPress={() =>
+              showLocation({
+                latitude: item.Latitude,
+                longitude: item.Longitude,
+                title: item.Name,
+              })
+            }>
+            <Icon name="ios-navigate" size={20} />
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
+  _keyExtractor = (item, index) => String(item.Id);
+
+  // _onRefresh = async () => {
+  //   console.log('onRefresh');
+  //   this.setState({refreshing: true});
+  //   await this.getRestaurantData(); //TODO
+  // };
   render() {
     return (
       <View>
@@ -74,7 +173,10 @@ export default class Activity extends React.Component {
           />
           <RNPickerSelect
             placeholder={{label: '選擇展覽館', value: null, color: '#9EA0A4'}}
-            onValueChange={value => this.setState({exhibition: value})}
+            onValueChange={value => {
+              // this.restaurantFilleter(value);
+              this.getExhibitionData(value);
+            }}
             items={
               this.state.selectAreaBuilding.length !== 0
                 ? this.state.selectAreaBuilding
@@ -92,6 +194,14 @@ export default class Activity extends React.Component {
             }}
           />
         </View>
+        <FlatList
+          keyExtractor={this._keyExtractor}
+          data={this.state.restaurantData}
+          renderItem={this._renderItem}
+          onEndReachedThreshold={0.2}
+          onRefresh={this._onRefresh}
+          refreshing={this.state.refreshing}
+        />
       </View>
     );
   }
@@ -116,6 +226,11 @@ var styles = StyleSheet.create({
   },
   f_direction_row: {
     flexDirection: 'row',
+  },
+  image: {
+    // position: 'absolute',
+    width: '100%',
+    height: 300,
   },
 });
 
