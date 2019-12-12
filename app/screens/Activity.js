@@ -5,7 +5,6 @@ import {
   StyleSheet,
   FlatList,
   Dimensions,
-  Platform,
   Image,
   TouchableOpacity,
 } from 'react-native';
@@ -41,12 +40,12 @@ export default class Activity extends React.Component {
 
   setDate = (event, date) => {
     date = date || this.state.date;
-
+    console.log(date);
     this.setState({
-      show: Platform.OS === 'ios' ? true : false,
       date,
       selectDate: JSON.stringify(moment(date).format('ll')),
     });
+    this.getFairData(this.state.city, this.state.place, date);
   };
 
   datepicker = () => {
@@ -92,7 +91,7 @@ export default class Activity extends React.Component {
     }
   }
 
-  filteData = data => {
+  filetData = data => {
     let aimData = this.state.buildingDataSource.filter(item => {
       return data === item.city;
     });
@@ -106,8 +105,8 @@ export default class Activity extends React.Component {
   async getFairData(place = '', city = '', date = this.state.date) {
     let userData = JSON.parse(await AsyncStorage.getItem('userData'));
     let data = {
-      place,
-      city,
+      place: this.state.place,
+      city: this.state.city,
       date,
       MemberID: userData.Id,
     };
@@ -155,7 +154,7 @@ export default class Activity extends React.Component {
           <Text>{item.StartDate + '~' + item.EndDate}</Text>
           <Text
             onPress={() => {
-              this.addFavorit(item.Id);
+              this.addFavorite(item.Id);
               item.Name = '測試'; // 要新增欄位
               console.log(item);
             }}>
@@ -185,7 +184,7 @@ export default class Activity extends React.Component {
   };
 
   /*------我的最愛API------*/
-  async addFavorit(EId) {
+  async addFavorite(EId) {
     let userData = JSON.parse(await AsyncStorage.getItem('userData'));
     // var data = JSON.stringify({
     //   MId: userData.Id,
@@ -232,8 +231,13 @@ export default class Activity extends React.Component {
           <RNPickerSelect
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}
             onValueChange={value => {
-              this.filteData(value);
+              this.filetData(value);
               this.setState({city: value});
+              this.getFairData(
+                this.state.city,
+                this.state.place,
+                this.state.date,
+              );
             }}
             items={this.state.area}
             style={{
@@ -249,7 +253,14 @@ export default class Activity extends React.Component {
           />
           <RNPickerSelect
             placeholder={{label: '選擇展覽館', value: null, color: '#9EA0A4'}}
-            onValueChange={value => this.setState({place: value})}
+            onValueChange={value => {
+              this.setState({place: value});
+              this.getFairData(
+                this.state.city,
+                this.state.place,
+                this.state.date,
+              );
+            }}
             items={
               this.state.selectAreaBuilding.length !== 0
                 ? this.state.selectAreaBuilding
@@ -303,6 +314,15 @@ export default class Activity extends React.Component {
             />
           )}
         </View>
+        {/* <View>
+          <Button
+            title="test"
+            onPress={() => {
+              this.getFairData();
+              console.log(this.state);
+            }}
+          />
+        </View> */}
         <FlatList
           keyExtractor={this._keyExtractor}
           data={this.state.fairData}
