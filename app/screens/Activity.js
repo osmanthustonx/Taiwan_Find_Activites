@@ -18,6 +18,7 @@ import moment from 'moment';
 import 'moment/locale/zh-tw';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Popup, showLocation} from 'react-native-map-link';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class Activity extends React.Component {
   onPress = () => {
@@ -314,15 +315,6 @@ export default class Activity extends React.Component {
             />
           )}
         </View>
-        {/* <View>
-          <Button
-            title="test"
-            onPress={() => {
-              this.getFairData();
-              console.log(this.state);
-            }}
-          />
-        </View> */}
         <FlatList
           keyExtractor={this._keyExtractor}
           data={this.state.fairData}
@@ -331,13 +323,6 @@ export default class Activity extends React.Component {
           onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
         />
-        {/* <Button onPress={this.onPress} title="Go to About" /> */}
-        {/* <Button
-          onPress={() => {
-            console.log(this.state.fairData);
-          }}
-          title="Go to About"
-        /> */}
       </View>
     );
   }
@@ -370,10 +355,8 @@ var styles = StyleSheet.create({
     height: height - 200,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    // marginBottom: 10,
   },
   image: {
-    // position: 'absolute',
     width: '100%',
     height: 300,
   },

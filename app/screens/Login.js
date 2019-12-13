@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Input, Button, Card, Image} from 'react-native-elements';
@@ -90,7 +90,7 @@ export default class Login extends React.Component {
         end={{x: 1, y: 0}}>
         <Card
           title="Taiwan Find Activity"
-          image={require('../assets/loginIcon2.png')}
+          image={require('../assets/loginIcon4.png')}
           imageProps={{resizeMode: 'contain'}}
           containerStyle={{
             width: '95%',
@@ -101,7 +101,7 @@ export default class Login extends React.Component {
           }}>
           <Input
             placeholder="example@address.com"
-            leftIcon={<Icon name="ios-mail" size={24} color="black" />}
+            leftIcon={<Icon name="ios-mail" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
             // errorStyle={{color: 'red'}}
             // errorMessage="ENTER A VALID ERROR HERE"
@@ -111,7 +111,7 @@ export default class Login extends React.Component {
           <View paddingVertical={10} />
           <Input
             placeholder="Password"
-            leftIcon={<Icon name="ios-lock" size={24} color="black" />}
+            leftIcon={<Icon name="ios-lock" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
             // errorStyle={{color: 'red'}}
             // errorMessage="ENTER A VALID ERROR HERE"
@@ -134,24 +134,23 @@ export default class Login extends React.Component {
           <Text
             style={{alignSelf: 'center', color: '#CDD6DA'}}
             onPress={() => console.log('忘記密碼了ＱＱ')}>
-            忘記密碼
+            Forget Password ?
           </Text>
         </Card>
 
         <View paddingVertical={10} />
 
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Text style={{color: '#e4e4e4', fontSize: 15, marginRight: -7}}>
-            Don't have account ？
+          <Text style={{color: '#e4e4e4', fontSize: 15, marginRight: 0}}>
+            Don't have an account ？
           </Text>
-          <Button
+          <Text
             onPress={() => {
               Actions.registered();
             }}
-            title="Sign in"
-            titleStyle={{color: 'white', fontSize: 15}}
-            type="clear"
-          />
+            style={{color: 'white', fontSize: 15}}>
+            Sign up
+          </Text>
         </View>
       </LinearGradient>
     );
@@ -163,7 +162,6 @@ var styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 20,

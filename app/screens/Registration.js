@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, StyleSheet, Text, TextInput, Platform} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Input, Button} from 'react-native-elements';
+import {Input, Button, Card} from 'react-native-elements';
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
@@ -10,6 +10,7 @@ import RadioForm, {
 } from 'react-native-simple-radio-button';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class Login extends React.Component {
   state = {
@@ -28,6 +29,7 @@ export default class Login extends React.Component {
     birth: new Date(),
     gender: 0,
     password: '',
+    loading: false,
   };
   onPress = () => {
     Actions.registered({user: '花的世界'});
@@ -56,7 +58,7 @@ export default class Login extends React.Component {
   };
 
   //gender
-  radio_props = [{label: '女', value: 0}, {label: '男', value: 1}]; //列舉
+  radio_props = [{label: 'Female', value: 0}, {label: 'Male', value: 1}]; //列舉
   onPressGender = gender => {
     this.setState({
       gender,
@@ -107,102 +109,151 @@ export default class Login extends React.Component {
 
   /*------撈API資料------*/
 
-  goRegist = () => {
-    let data = JSON.stringify({
+  async goRegistration() {
+    this.setState({
+      loading: true,
+    });
+    let data = {
       Name: this.state.name,
       Email: this.state.email,
       Birth: moment(this.state.date).format('ll'),
       Gender: this.state.gender,
       Password: this.state.password,
-    });
+    };
 
-    let xhr = new XMLHttpRequest();
-    // xhr.withCredentials = true;
-
-    xhr.addEventListener('readystatechange', function() {
-      if (this.readyState === 4) {
-        if (this.responseText === '成功') {
-          Actions.pop();
-        } else {
-          console.log(this.responseText);
-        }
+    let opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      let res = await fetch(
+        'https://tfa.rocket-coding.com/Member/AddMember',
+        opts,
+      );
+      let resJson = await res.text();
+      if (resJson !== '成功') {
+        this.setState({
+          loading: false,
+        });
+      } else {
+        this.setState({
+          loading: false,
+        });
+        Actions.pop();
       }
-    });
-
-    xhr.open('POST', 'https://tfa.rocket-coding.com/Member/AddMember');
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(data);
-  };
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   render() {
     return (
-      <View style={styles.container}>
-        {/* 姓名Input */}
-        <Input
-          placeholder="姓名"
-          leftIcon={<Icon name="ios-person" size={24} color="black" />}
-          leftIconContainerStyle={{paddingRight: 10}}
-          // errorStyle={{color: 'red'}}
-          // errorMessage="ENTER A VALID ERROR HERE"
-          onChangeText={this.onChangeName}
-        />
-
-        {/* 性別Input */}
-        <View>
-          <RadioForm
-            radio_props={this.radio_props}
-            initial={0}
-            formHorizontal={true}
-            labelHorizontal={false}
-            onPress={this.onPressGender}
+      <LinearGradient
+        colors={['#bd83ce', '#ff9068']}
+        style={styles.container}
+        start={{x: 0, y: 1}}
+        end={{x: 1, y: 0}}>
+        <Card
+          containerStyle={{width: '90%', height: '67%', overflow: 'hidden'}}>
+          <Input
+            placeholder="Name"
+            leftIcon={<Icon name="ios-person" size={24} color="#35477d" />}
+            leftIconContainerStyle={{paddingRight: 10}}
+            // errorStyle={{color: 'red'}}
+            // errorMessage="ENTER A VALID ERROR HERE"
+            onChangeText={this.onChangeName}
+            label="Your Name"
           />
-        </View>
-
-        {/* 生日Input */}
-        <View style={{width: '100%'}}>
-          <View>
-            <Button onPress={this.datepicker} title="生日" type="outline" />
-          </View>
-          {this.state.show && (
-            <DateTimePicker
-              value={this.state.date}
-              mode={'date'}
-              is24Hour={true}
-              display="default"
-              onChange={this.setDate}
+          <View paddingVertical={10} />
+          <View style={{alignSelf: 'center'}}>
+            <RadioForm
+              radio_props={this.radio_props}
+              initial={-1}
+              formHorizontal={true}
+              labelHorizontal={false}
+              onPress={this.onPressGender}
+              buttonColor={'#ffe8d6'}
+              selectedButtonColor={'#ff9068'}
+              labelColor={'gray'}
             />
-          )}
+          </View>
+          <View paddingVertical={10} />
+          <View style={{width: '100%'}}>
+            <View>
+              <Button
+                onPress={this.datepicker}
+                title="Your Birth Day"
+                buttonStyle={{backgroundColor: '#ff9068'}}
+                icon={
+                  <Icon
+                    name="ios-calendar"
+                    size={25}
+                    color="black"
+                    style={{paddingTop: 4, paddingLeft: 10, color: '#35477d'}}
+                  />
+                }
+                iconRight
+              />
+            </View>
+            {this.state.show && (
+              <DateTimePicker
+                value={this.state.date}
+                mode={'date'}
+                is24Hour={true}
+                display="default"
+                onChange={this.setDate}
+              />
+            )}
+          </View>
+          <View paddingVertical={10} />
+          <Input
+            placeholder="example@address.com"
+            leftIcon={<Icon name="ios-mail" size={24} color="#35477d" />}
+            leftIconContainerStyle={{paddingRight: 10}}
+            // errorStyle={{color: 'red'}}
+            // errorMessage="ENTER A VALID ERROR HERE"
+            onChangeText={this.onChangeEmail}
+            label="Your email address"
+          />
+          <View paddingVertical={5} />
+          <Input
+            placeholder="Password"
+            leftIcon={<Icon name="ios-lock" size={24} color="#35477d" />}
+            leftIconContainerStyle={{paddingRight: 10}}
+            // errorStyle={{color: 'red'}}
+            // errorMessage="ENTER A VALID ERROR HERE"
+            onChangeText={this.onChangePassword}
+            secureTextEntry={true}
+            label="Password"
+          />
+          <View paddingVertical={10} />
+          <Button
+            title="Sign up"
+            onPress={() => {
+              this.goRegistration();
+              // this.test();
+            }}
+            buttonStyle={{backgroundColor: '#ff9068'}}
+            loading={this.state.loading}
+          />
+        </Card>
+        <View paddingVertical={10} />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={{color: '#e4e4e4', fontSize: 15, marginRight: 0}}>
+            Already have an account ？
+          </Text>
+          <Text
+            onPress={() => {
+              Actions.pop();
+            }}
+            style={{color: 'white', fontSize: 15}}>
+            Sign in
+          </Text>
         </View>
-
-        {/* 信箱Input */}
-        <Input
-          placeholder="請輸入電子信箱"
-          leftIcon={<Icon name="ios-mail" size={24} color="black" />}
-          leftIconContainerStyle={{paddingRight: 10}}
-          // errorStyle={{color: 'red'}}
-          // errorMessage="ENTER A VALID ERROR HERE"
-          onChangeText={this.onChangeEmail}
-        />
-
-        {/* 密碼Input */}
-        <Input
-          placeholder="請輸入密碼"
-          leftIcon={<Icon name="ios-lock" size={24} color="black" />}
-          leftIconContainerStyle={{paddingRight: 10}}
-          // errorStyle={{color: 'red'}}
-          // errorMessage="ENTER A VALID ERROR HERE"
-          onChangeText={this.onChangePassword}
-          secureTextEntry={true}
-        />
-
-        <Button
-          title="送出"
-          onPress={() => {
-            this.goRegist();
-            // this.test();
-          }}
-        />
-      </View>
+      </LinearGradient>
     );
   }
 }
@@ -212,7 +263,6 @@ var styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 20,

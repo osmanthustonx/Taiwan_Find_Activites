@@ -47,7 +47,7 @@ export default class Routes extends Component {
                 // }}
               />
               <Scene
-                hideNavBar={false}
+                hideNavBar={true}
                 key="registered"
                 component={Registration}
                 title="註冊"
@@ -59,8 +59,6 @@ export default class Routes extends Component {
             hideNavBar={true}
             key="tabbar" // 在 Tabs 的 key(tabbar) 可以讓 login 完之後，可以透過 action.tabbar，讓你的應用切換到這個 tabbar 的場景當中
             tabBarStyle={styles.tabBarStyle}
-            // activeBackgroundColor="#56C7FF"
-            // inactiveBackgroundColor="#DFDEE5"
             tabBarPosition="bottom" // default 'bottom' on ios, 'top' on android
           >
             <Stack
@@ -74,9 +72,9 @@ export default class Routes extends Component {
                 component={Activity}
                 title="最新活動"
                 titleStyle={{color: 'black'}}
-                onEnter={() => {
-                  this.leftLogin();
-                }}
+                // onEnter={() => {
+                //   this.leftLogin();
+                // }}
               />
               <Scene
                 key="activityInfo"
@@ -144,12 +142,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // tabBarStyle: {
-  //   backgroundColor: '#EFEEF5',
-  // },
-  // tabBarSelectedItemStyle: {
-  //   backgroundColor: '#DFDEE5',
-  // },
   titleStyle: {
     color: 'white',
   },
