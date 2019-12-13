@@ -4,6 +4,7 @@ import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Input, Button, Card, Image} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class Login extends React.Component {
   state = {
@@ -82,15 +83,21 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <LinearGradient
+        colors={['#bd83ce', '#ff9068']}
+        style={styles.container}
+        start={{x: 0, y: 1}}
+        end={{x: 1, y: 0}}>
         <Card
+          title="Taiwan Find Activity"
           image={require('../assets/loginIcon2.png')}
           imageProps={{resizeMode: 'contain'}}
           containerStyle={{
             width: '95%',
-            height: '60%',
-            shadowColor: '#D8D2D3',
-            shadowOffset: {width: 2, height: 2},
+            height: '68%',
+            shadowColor: 'black',
+            shadowOffset: {width: 5, height: 5},
+            shadowOpacity: 0.2,
           }}>
           <Input
             placeholder="example@address.com"
@@ -117,10 +124,11 @@ export default class Login extends React.Component {
             onPress={() => {
               this.goLogin();
             }}
-            title="登入"
-            type="outline"
+            title="Login"
+            titleStyle={{color: 'white'}}
+            type="clear"
             loading={this.state.loading}
-            // loading={this.state.loading}
+            buttonStyle={{backgroundColor: '#ff9068'}}
           />
           <View paddingVertical={5} />
           <Text
@@ -132,14 +140,20 @@ export default class Login extends React.Component {
 
         <View paddingVertical={10} />
 
-        <Button
-          onPress={() => {
-            Actions.registered();
-          }}
-          title="註冊"
-          type="clear"
-        />
-      </View>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={{color: '#e4e4e4', fontSize: 15, marginRight: -7}}>
+            Don't have account ？
+          </Text>
+          <Button
+            onPress={() => {
+              Actions.registered();
+            }}
+            title="Sign in"
+            titleStyle={{color: 'white', fontSize: 15}}
+            type="clear"
+          />
+        </View>
+      </LinearGradient>
     );
   }
 }

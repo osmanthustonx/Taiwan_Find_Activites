@@ -42,9 +42,9 @@ export default class Routes extends Component {
                 key="login"
                 component={Login}
                 title="登入"
-                onExit={() => {
-                  this.leftLogin();
-                }}
+                // onExit={() => {
+                //   this.leftLogin();
+                // }}
               />
               <Scene
                 hideNavBar={false}
