@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, Linking} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Input, Button} from 'react-native-elements';
@@ -40,40 +40,42 @@ export default class Login extends React.Component {
   };
 
   /*------撈API資料------*/
-  goLogin = () => {
-    let data = JSON.stringify({
-      userName: this.state.email,
-      password: this.state.password,
+  async goLogin() {
+    this.setState({
+      loading: true,
     });
-    let xhr = new XMLHttpRequest();
-    xhr.addEventListener('readystatechange', function() {
-      if (this.readyState === 4) {
-        if (this.responseText !== '登入失敗') {
-          let data = this.responseText;
-          (async function() {
-            try {
-              await AsyncStorage.setItem('userData', data);
-              await Actions.tabbar();
-            } catch (e) {
-              console.log(e);
-            }
-          })();
-        } else {
-          console.log(this.responseText);
-        }
-      }
-    });
-    xhr.open('POST', 'https://tfa.rocket-coding.com/Member/Login');
-    xhr.setRequestHeader('Content-Type', 'application/json,application/json');
-    xhr.send(data);
-  };
-
-  test() {
     let data = {
       userName: this.state.email,
       password: this.state.password,
     };
-    console.log(data);
+    let opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      let res = await fetch('https://tfa.rocket-coding.com/Member/Login', opts);
+      let resJson = await res.text();
+      if (resJson === '登入失敗') {
+        return;
+      } else {
+        (async function() {
+          try {
+            await AsyncStorage.setItem('userData', resJson);
+            Actions.tabbar();
+          } catch (e) {
+            console.log(e);
+          }
+        })();
+        this.setState({
+          loading: false,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   render() {
@@ -98,9 +100,12 @@ export default class Login extends React.Component {
         />
         <View paddingVertical={10} />
         <Button
-          onPress={this.goLogin}
+          onPress={() => {
+            this.goLogin();
+          }}
           title="登入"
           type="outline"
+          loading={this.state.loading}
           // loading={this.state.loading}
         />
         <Button

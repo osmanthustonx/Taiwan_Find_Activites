@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {Router, Stack, Scene, Tabs} from 'react-native-router-flux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 /*------ICON------*/
 import ActivityIcon from '../components/ActivityIcon';
@@ -20,18 +21,41 @@ import Favorite from '../screens/Favorite';
 import Profile from '../screens/Profile';
 
 export default class Routes extends Component {
+  state = {
+    isLoginShow: true,
+  };
+  leftLogin() {
+    this.setState({
+      isLoginShow: false,
+    });
+    console.log('離開');
+    console.log(this.state.isLoginShow);
+  }
+
   render() {
     return (
       <Router>
         <Stack key="root">
-          <Scene
-            // hideNavBar={true}
-            key="login"
-            component={Login}
-            title="登入"
-            // navigationBarStyle={{backgroundColor: 'skyblue'}}
-          />
-          <Scene key="registered" component={Registration} title="註冊" />
+          {this.state.isLoginShow && (
+            <Stack hideNavBar={true}>
+              <Scene
+                hideNavBar={false}
+                key="login"
+                component={Login}
+                title="登入"
+                onExit={() => {
+                  this.leftLogin();
+                }}
+              />
+              <Scene
+                hideNavBar={false}
+                key="registered"
+                component={Registration}
+                title="註冊"
+              />
+            </Stack>
+          )}
+
           <Tabs
             hideNavBar={true}
             key="tabbar" // 在 Tabs 的 key(tabbar) 可以讓 login 完之後，可以透過 action.tabbar，讓你的應用切換到這個 tabbar 的場景當中
@@ -51,6 +75,9 @@ export default class Routes extends Component {
                 component={Activity}
                 title="最新活動"
                 titleStyle={{color: 'black'}}
+                onEnter={() => {
+                  this.leftLogin();
+                }}
               />
               <Scene
                 key="activityInfo"
