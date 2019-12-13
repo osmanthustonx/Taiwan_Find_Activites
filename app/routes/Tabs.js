@@ -39,7 +39,6 @@ export default class Routes extends Component {
           {this.state.isLoginShow && (
             <Stack hideNavBar={true}>
               <Scene
-                hideNavBar={false}
                 key="login"
                 component={Login}
                 title="登入"

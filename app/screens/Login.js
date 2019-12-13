@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Input, Button} from 'react-native-elements';
+import {Input, Button, Card, Image} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Login extends React.Component {
@@ -59,7 +59,9 @@ export default class Login extends React.Component {
       let res = await fetch('https://tfa.rocket-coding.com/Member/Login', opts);
       let resJson = await res.text();
       if (resJson === '登入失敗') {
-        return;
+        this.setState({
+          loading: false,
+        });
       } else {
         (async function() {
           try {
@@ -81,33 +83,55 @@ export default class Login extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Input
-          placeholder="請輸入電子信箱"
-          leftIcon={<Icon name="ios-mail" size={24} color="black" />}
-          leftIconContainerStyle={{paddingRight: 10}}
-          // errorStyle={{color: 'red'}}
-          // errorMessage="ENTER A VALID ERROR HERE"
-          onChangeText={this.onChangeLoginEmail}
-        />
-        <Input
-          placeholder="請輸入密碼"
-          leftIcon={<Icon name="ios-lock" size={24} color="black" />}
-          leftIconContainerStyle={{paddingRight: 10}}
-          // errorStyle={{color: 'red'}}
-          // errorMessage="ENTER A VALID ERROR HERE"
-          onChangeText={this.onChangeLoginPassword}
-          secureTextEntry={true}
-        />
+        <Card
+          image={require('../assets/loginIcon2.png')}
+          imageProps={{resizeMode: 'contain'}}
+          containerStyle={{
+            width: '95%',
+            height: '60%',
+            shadowColor: '#D8D2D3',
+            shadowOffset: {width: 2, height: 2},
+          }}>
+          <Input
+            placeholder="example@address.com"
+            leftIcon={<Icon name="ios-mail" size={24} color="black" />}
+            leftIconContainerStyle={{paddingRight: 10}}
+            // errorStyle={{color: 'red'}}
+            // errorMessage="ENTER A VALID ERROR HERE"
+            onChangeText={this.onChangeLoginEmail}
+            label="Your email address"
+          />
+          <View paddingVertical={10} />
+          <Input
+            placeholder="Password"
+            leftIcon={<Icon name="ios-lock" size={24} color="black" />}
+            leftIconContainerStyle={{paddingRight: 10}}
+            // errorStyle={{color: 'red'}}
+            // errorMessage="ENTER A VALID ERROR HERE"
+            onChangeText={this.onChangeLoginPassword}
+            label="Password"
+            secureTextEntry={true}
+          />
+          <View paddingVertical={10} />
+          <Button
+            onPress={() => {
+              this.goLogin();
+            }}
+            title="登入"
+            type="outline"
+            loading={this.state.loading}
+            // loading={this.state.loading}
+          />
+          <View paddingVertical={5} />
+          <Text
+            style={{alignSelf: 'center', color: '#CDD6DA'}}
+            onPress={() => console.log('忘記密碼了ＱＱ')}>
+            忘記密碼
+          </Text>
+        </Card>
+
         <View paddingVertical={10} />
-        <Button
-          onPress={() => {
-            this.goLogin();
-          }}
-          title="登入"
-          type="outline"
-          loading={this.state.loading}
-          // loading={this.state.loading}
-        />
+
         <Button
           onPress={() => {
             Actions.registered();
@@ -115,13 +139,6 @@ export default class Login extends React.Component {
           title="註冊"
           type="clear"
         />
-        <Text onPress={() => console.log('忘記密碼了ＱＱ')}>忘記密碼</Text>
-        {/* <Button
-          title="Click me"
-          onPress={() => {
-            Linking.openURL('https://google.com');
-          }}
-        /> */}
       </View>
     );
   }
