@@ -125,7 +125,7 @@ export default class Login extends React.Component {
       <LinearGradient
         colors={['#bd83ce', '#ff9068']}
         style={styles.container}
-        start={{x: 0, y: 1}}
+        start={{x: 1, y: 1}}
         end={{x: 1, y: 0}}>
         <Card
           title="Taiwan Find Activity"

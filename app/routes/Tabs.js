@@ -65,8 +65,7 @@ export default class Routes extends Component {
               key="tab1"
               tabBarLabel="活動"
               icon={ActivityIcon}
-              titleStyle={styles.titleStyle}
-              keyPrefix="tab1">
+              titleStyle={styles.titleStyle}>
               <Scene
                 key="activity"
                 component={Activity}
@@ -87,8 +86,7 @@ export default class Routes extends Component {
               key="tab2"
               tabBarLabel="附近美食"
               icon={RestaurantIcon}
-              titleStyle={styles.titleStyle}
-              keyPrefix="tab2">
+              titleStyle={styles.titleStyle}>
               <Scene
                 key="restaurant"
                 component={Restaurant}
@@ -100,8 +98,7 @@ export default class Routes extends Component {
               key="tab3"
               tabBarLabel="我的收藏"
               icon={FavoriteIcon}
-              titleStyle={styles.titleStyle}
-              keyPrefix="tab3">
+              titleStyle={styles.titleStyle}>
               <Scene
                 key="favorite"
                 component={Favorite}
@@ -119,11 +116,23 @@ export default class Routes extends Component {
               key="profile"
               tabBarLabel="個人頁面"
               icon={ProfileIcon}
-              titleStyle={styles.titleStyle}
-              keyPrefix="tab4">
+              titleStyle={styles.titleStyle}>
               <Scene
                 key="profile"
+                hideNavBar={true}
                 component={Profile}
+                title="個人頁面"
+                titleStyle={{color: 'black'}}
+              />
+            </Stack>
+            <Stack
+              key="test"
+              tabBarLabel="test"
+              icon={ProfileIcon}
+              titleStyle={styles.titleStyle}>
+              <Scene
+                key="test"
+                component={TabHome}
                 title="個人頁面"
                 titleStyle={{color: 'black'}}
               />

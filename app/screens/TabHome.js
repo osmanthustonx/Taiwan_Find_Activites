@@ -68,42 +68,42 @@ export default class Home extends React.Component {
     });
   }
 
-  setDate = (event, date) => {
-    date = date || this.state.date;
+  // setDate = (event, date) => {
+  //   date = date || this.state.date;
 
-    this.setState({
-      show: Platform.OS === 'ios' ? true : false,
-      date,
-    });
-  };
+  //   this.setState({
+  //     show: Platform.OS === 'ios' ? true : false,
+  //     date,
+  //   });
+  // };
 
-  show = mode => {
-    this.setState({
-      show: true,
-      mode,
-    });
-  };
+  // show = mode => {
+  //   this.setState({
+  //     show: true,
+  //     mode,
+  //   });
+  // };
 
-  unShow = mode => {
-    this.setState({
-      show: false,
-      mode,
-    });
-  };
+  // unShow = mode => {
+  //   this.setState({
+  //     show: false,
+  //     mode,
+  //   });
+  // };
 
-  datepicker = () => {
-    this.show('date');
-  };
+  // datepicker = () => {
+  //   this.show('date');
+  // };
 
-  timepicker = () => {
-    this.show('time');
-  };
+  // timepicker = () => {
+  //   this.show('time');
+  // };
 
-  onPress = () => {
-    Actions[this.props.keyPrefix + '_about']({
-      user: 'dmoon',
-    });
-  };
+  // onPress = () => {
+  //   Actions[this.props.keyPrefix + '_about']({
+  //     user: 'dmoon',
+  //   });
+  // };
 
   render() {
     const {show, date, mode} = this.state;
@@ -119,7 +119,7 @@ export default class Home extends React.Component {
             )}
           </View>
         </TouchableOpacity>
-        <Text style={styles.welcome}>Welcome {this.props.title}</Text>
+        {/* <Text style={styles.welcome}>Welcome {this.props.title}</Text>
         <Button onPress={this.onPress} title="Go to About" />
         <Button title="Back" onPress={Actions.pop} />
 
@@ -161,7 +161,7 @@ export default class Home extends React.Component {
           Icon={() => {
             return <Icon name="md-arrow-down" size={24} color="gray" />;
           }}
-        />
+        /> */}
       </View>
     );
   }
