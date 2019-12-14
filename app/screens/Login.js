@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, Alert} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Input, Button, Card, Image} from 'react-native-elements';
+import {Input, Button, Card} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -11,6 +11,8 @@ export default class Login extends React.Component {
     email: '',
     password: '',
     loading: false,
+    emailErrorMsg: '',
+    fieldPwdErrorMsg: '',
   };
 
   validate = text => {
@@ -40,6 +42,28 @@ export default class Login extends React.Component {
     });
   };
 
+  /*-----驗證資料填寫------*/
+  checkField(data) {
+    if (!data.userName) {
+      this.setState({
+        emailErrorMsg: 'Please fill in your email',
+      });
+    } else {
+      this.setState({
+        emailErrorMsg: '',
+      });
+    }
+    if (!data.password) {
+      this.setState({
+        fieldPwdErrorMsg: 'Please fill in your password',
+      });
+    } else {
+      this.setState({
+        fieldPwdErrorMsg: '',
+      });
+    }
+  }
+
   /*------撈API資料------*/
   async goLogin() {
     this.setState({
@@ -49,6 +73,9 @@ export default class Login extends React.Component {
       userName: this.state.email,
       password: this.state.password,
     };
+
+    this.checkField(data);
+
     let opts = {
       method: 'POST',
       headers: {
@@ -63,6 +90,18 @@ export default class Login extends React.Component {
         this.setState({
           loading: false,
         });
+        Alert.alert(
+          'Login fail',
+          '',
+          [
+            {
+              text: 'Confirm',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+          ],
+          {cancelable: false},
+        );
       } else {
         (async function() {
           try {
@@ -94,7 +133,6 @@ export default class Login extends React.Component {
           imageProps={{resizeMode: 'contain'}}
           containerStyle={{
             width: '95%',
-            height: '68%',
             shadowColor: 'black',
             shadowOffset: {width: 5, height: 5},
             shadowOpacity: 0.2,
@@ -103,8 +141,7 @@ export default class Login extends React.Component {
             placeholder="example@address.com"
             leftIcon={<Icon name="ios-mail" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
-            // errorStyle={{color: 'red'}}
-            // errorMessage="ENTER A VALID ERROR HERE"
+            errorMessage={this.state.emailErrorMsg}
             onChangeText={this.onChangeLoginEmail}
             label="Your email address"
           />
@@ -113,8 +150,7 @@ export default class Login extends React.Component {
             placeholder="Password"
             leftIcon={<Icon name="ios-lock" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
-            // errorStyle={{color: 'red'}}
-            // errorMessage="ENTER A VALID ERROR HERE"
+            errorMessage={this.state.fieldPwdErrorMsg}
             onChangeText={this.onChangeLoginPassword}
             label="Password"
             secureTextEntry={true}

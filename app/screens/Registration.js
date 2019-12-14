@@ -15,25 +15,24 @@ import LinearGradient from 'react-native-linear-gradient';
 export default class Login extends React.Component {
   state = {
     value: null,
-    date: new Date(),
     show: false,
-    // memberData: {
-    //   name: '',
-    //   email: '',
-    //   birth: '',
-    //   gender: 0,
-    //   password: '',
-    // },
     name: '',
     email: '',
     birth: new Date(),
-    gender: 0,
+    gender: -1,
     password: '',
     loading: false,
+    RadioBtnColor: '#ffe8d6',
+    birthBtnBorder: 'white',
+    displayBirthDay: 'Your Birth Day',
+    emailErrorMsg: '',
+    emailErrorColor: '#ffffff',
+    fieldNameErrorMsg: '',
+    fieldNameErrorColor: '#ffffff',
+    fieldPwdErrorMsg: '',
+    fieldPwdErrorColor: '#ffffff',
   };
-  onPress = () => {
-    Actions.registered({user: '花的世界'});
-  };
+
   validate = text => {
     console.log(text);
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -54,7 +53,6 @@ export default class Login extends React.Component {
     this.setState({
       name,
     });
-    // console.log(this.state.name);
   };
 
   //gender
@@ -63,7 +61,6 @@ export default class Login extends React.Component {
     this.setState({
       gender,
     });
-    // console.log(this.state.memberData);
   };
 
   //birth
@@ -76,18 +73,9 @@ export default class Login extends React.Component {
   //一定要有這個event參數，不知為何
   onChangeBirth = (event, birth) => {
     birth = birth || this.state.birth;
-
     this.setState({
       birth,
-    });
-    // console.log(this.state.memberData);
-  };
-  setDate = (event, date) => {
-    date = date || this.state.date;
-
-    this.setState({
-      // show: Platform.OS === 'ios' ? true : false,
-      date,
+      displayBirthDay: JSON.stringify(moment(birth).format('ll')),
     });
   };
 
@@ -96,7 +84,6 @@ export default class Login extends React.Component {
     this.setState({
       email,
     });
-    // console.log(this.state.memberData);
   };
 
   //password
@@ -104,10 +91,113 @@ export default class Login extends React.Component {
     this.setState({
       password,
     });
-    // console.log(this.state.memberData);
   };
 
-  /*------撈API資料------*/
+  /*------驗證信箱------*/
+  async checkEmail() {
+    let data = {
+      Mail: this.state.email,
+    };
+
+    if (!data.Mail) {
+      this.setState({
+        emailErrorMsg: 'Please fill in email',
+        emailErrorColor: 'red',
+      });
+      return;
+    } else {
+      this.setState({
+        emailErrorMsg: '',
+        emailErrorColor: 'white',
+      });
+    }
+
+    let opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      let res = await fetch(
+        'https://tfa.rocket-coding.com/member/IsReMail',
+        opts,
+      );
+      let resJson = await res.json();
+      if (!resJson) {
+        this.setState({
+          emailErrorMsg: 'This email has been used',
+          emailErrorColor: 'red',
+        });
+      } else {
+        this.setState({
+          emailErrorMsg: 'You can use it !',
+          emailErrorColor: 'green',
+        });
+      }
+    } catch (error) {}
+  }
+
+  /*------資料欄位填寫驗證------*/
+  checkField(data) {
+    if (!data.Name) {
+      this.setState({
+        fieldNameErrorMsg: 'Please fill in name',
+        fieldNameErrorColor: 'red',
+      });
+    } else {
+      this.setState({
+        fieldNameErrorMsg: '',
+        fieldNameErrorColor: 'white',
+      });
+    }
+    if (data.Gender === -1) {
+      this.setState({
+        RadioBtnColor: 'red',
+      });
+    } else {
+      this.setState({
+        RadioBtnColor: '#ffe8d6',
+      });
+    }
+
+    if (data.Birth === moment(new Date()).format('ll')) {
+      this.setState({
+        birthBtnBorder: 'red',
+      });
+    } else {
+      this.setState({
+        birthBtnBorder: 'white',
+      });
+    }
+
+    if (!data.Email) {
+      this.setState({
+        emailErrorMsg: 'Please fill in email',
+        emailErrorColor: 'red',
+      });
+    } else {
+      this.setState({
+        emailErrorMsg: '',
+        emailErrorColor: 'white',
+      });
+    }
+
+    if (!data.Password) {
+      this.setState({
+        fieldPwdErrorMsg: 'Please fill in password',
+        fieldPwdErrorColor: 'red',
+      });
+    } else {
+      this.setState({
+        fieldPwdErrorMsg: '',
+        fieldPwdErrorColor: 'white',
+      });
+    }
+  }
+
+  /*------送API資料------*/
 
   async goRegistration() {
     this.setState({
@@ -116,10 +206,12 @@ export default class Login extends React.Component {
     let data = {
       Name: this.state.name,
       Email: this.state.email,
-      Birth: moment(this.state.date).format('ll'),
+      Birth: moment(this.state.birth).format('ll'),
       Gender: this.state.gender,
       Password: this.state.password,
     };
+
+    this.checkField(data);
 
     let opts = {
       method: 'POST',
@@ -156,14 +248,13 @@ export default class Login extends React.Component {
         style={styles.container}
         start={{x: 0, y: 1}}
         end={{x: 1, y: 0}}>
-        <Card
-          containerStyle={{width: '90%', height: '67%', overflow: 'hidden'}}>
+        <Card containerStyle={{width: '90%', overflow: 'hidden'}}>
           <Input
             placeholder="Name"
             leftIcon={<Icon name="ios-person" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
-            // errorStyle={{color: 'red'}}
-            // errorMessage="ENTER A VALID ERROR HERE"
+            errorStyle={{color: this.state.fieldNameErrorColor}}
+            errorMessage={this.state.fieldNameErrorMsg}
             onChangeText={this.onChangeName}
             label="Your Name"
           />
@@ -175,7 +266,7 @@ export default class Login extends React.Component {
               formHorizontal={true}
               labelHorizontal={false}
               onPress={this.onPressGender}
-              buttonColor={'#ffe8d6'}
+              buttonColor={this.state.RadioBtnColor}
               selectedButtonColor={'#ff9068'}
               labelColor={'gray'}
             />
@@ -185,8 +276,14 @@ export default class Login extends React.Component {
             <View>
               <Button
                 onPress={this.datepicker}
-                title="Your Birth Day"
-                buttonStyle={{backgroundColor: '#ff9068'}}
+                title={this.state.displayBirthDay}
+                titleStyle={{color: 'white'}}
+                buttonStyle={{
+                  backgroundColor: '#ff9068',
+                  borderColor: this.state.birthBtnBorder,
+                  borderWidth: 2,
+                }}
+                type="outline"
                 icon={
                   <Icon
                     name="ios-calendar"
@@ -200,11 +297,11 @@ export default class Login extends React.Component {
             </View>
             {this.state.show && (
               <DateTimePicker
-                value={this.state.date}
+                value={this.state.birth}
                 mode={'date'}
                 is24Hour={true}
                 display="default"
-                onChange={this.setDate}
+                onChange={this.onChangeBirth}
               />
             )}
           </View>
@@ -213,9 +310,12 @@ export default class Login extends React.Component {
             placeholder="example@address.com"
             leftIcon={<Icon name="ios-mail" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
-            // errorStyle={{color: 'red'}}
-            // errorMessage="ENTER A VALID ERROR HERE"
+            errorMessage={this.state.emailErrorMsg}
+            errorStyle={{color: this.state.emailErrorColor}}
             onChangeText={this.onChangeEmail}
+            onBlur={() => {
+              this.checkEmail();
+            }}
             label="Your email address"
           />
           <View paddingVertical={5} />
@@ -223,8 +323,8 @@ export default class Login extends React.Component {
             placeholder="Password"
             leftIcon={<Icon name="ios-lock" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
-            // errorStyle={{color: 'red'}}
-            // errorMessage="ENTER A VALID ERROR HERE"
+            errorStyle={{color: this.state.fieldPwdErrorColor}}
+            errorMessage={this.state.fieldPwdErrorMsg}
             onChangeText={this.onChangePassword}
             secureTextEntry={true}
             label="Password"

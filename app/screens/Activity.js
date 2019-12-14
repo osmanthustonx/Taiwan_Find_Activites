@@ -145,7 +145,14 @@ export default class Activity extends React.Component {
       <View>
         <TouchableOpacity onPress={this.onPress}>
           <View style={{alignItems: 'center'}}>
-            <Image source={{uri: item.Image}} style={styles.image} />
+            <Image
+              source={{
+                uri: `https://tfa.rocket-coding.com/index/showdata/${
+                  item.Image
+                }`,
+              }}
+              style={styles.image}
+            />
             <Text style={styles.label}>Press Me</Text>
           </View>
         </TouchableOpacity>
