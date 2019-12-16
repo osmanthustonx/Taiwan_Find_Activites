@@ -58,9 +58,9 @@ export default class Routes extends Component {
           <Tabs
             hideNavBar={true}
             key="tabbar" // 在 Tabs 的 key(tabbar) 可以讓 login 完之後，可以透過 action.tabbar，讓你的應用切換到這個 tabbar 的場景當中
-            tabBarStyle={styles.tabBarStyle}
             tabBarPosition="bottom" // default 'bottom' on ios, 'top' on android
-          >
+            navigationBarStyle={{backgroundColor: 'white'}}
+            showLabel={false}>
             <Stack
               key="tab1"
               tabBarLabel="活動"
@@ -79,7 +79,6 @@ export default class Routes extends Component {
                 key="activityInfo"
                 component={ActivityInfo}
                 title="活動名稱"
-                titleStyle={{color: 'black'}}
               />
             </Stack>
             <Stack
@@ -87,12 +86,7 @@ export default class Routes extends Component {
               tabBarLabel="附近美食"
               icon={RestaurantIcon}
               titleStyle={styles.titleStyle}>
-              <Scene
-                key="restaurant"
-                component={Restaurant}
-                title="附近美食"
-                titleStyle={{color: 'black'}}
-              />
+              <Scene key="restaurant" component={Restaurant} title="附近美食" />
             </Stack>
             <Stack
               key="tab3"
@@ -103,13 +97,12 @@ export default class Routes extends Component {
                 key="favorite"
                 component={Favorite}
                 title="我的收藏"
-                titleStyle={{color: 'black'}}
+                hideNavBar={true}
               />
               <Scene
                 key="activityInfo"
                 component={ActivityInfo}
                 title="活動名稱"
-                titleStyle={{color: 'black'}}
               />
             </Stack>
             <Stack
@@ -122,20 +115,15 @@ export default class Routes extends Component {
                 hideNavBar={true}
                 component={Profile}
                 title="個人頁面"
-                titleStyle={{color: 'black'}}
               />
             </Stack>
             <Stack
               key="test"
               tabBarLabel="test"
               icon={ProfileIcon}
-              titleStyle={styles.titleStyle}>
-              <Scene
-                key="test"
-                component={TabHome}
-                title="個人頁面"
-                titleStyle={{color: 'black'}}
-              />
+              titleStyle={styles.titleStyle}
+              navigationBarStyle={{paddingBottom: 10}}>
+              <Scene key="test" component={About} title="個人頁面" />
             </Stack>
           </Tabs>
         </Stack>
@@ -152,6 +140,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleStyle: {
-    color: 'white',
+    color: 'black',
   },
 });

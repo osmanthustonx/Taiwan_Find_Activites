@@ -131,7 +131,9 @@ export default class Activity extends React.Component {
           <View style={{alignItems: 'center'}}>
             <Image
               source={{
-                uri: item.Photo,
+                uri: `https://tfa.rocket-coding.com/upfiles/restaurant/${
+                  item.Photo
+                }`,
               }}
               style={styles.image}
             />

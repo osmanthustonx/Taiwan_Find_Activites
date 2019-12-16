@@ -10,7 +10,7 @@ const propTypes = {
 
 const ActivityIcon = props => {
   return (
-    <Text style={{color: props.focused ? '#1C60FE' : 'black'}}>
+    <Text style={{color: props.focused ? '#ff9068' : 'black'}}>
       <Icon name="logo-game-controller-b" size={20} />
       {props.title}
     </Text>

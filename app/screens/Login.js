@@ -55,7 +55,7 @@ export default class Login extends React.Component {
       this.setState({
         emailErrorMsg: 'Please fill in your email',
       });
-      return;
+      return false;
     } else {
       this.setState({
         emailErrorMsg: '',
@@ -65,12 +65,13 @@ export default class Login extends React.Component {
       this.setState({
         fieldPwdErrorMsg: 'Please fill in your password',
       });
-      return;
+      return false;
     } else {
       this.setState({
         fieldPwdErrorMsg: '',
       });
     }
+    return true;
   }
 
   /*------撈API資料------*/
@@ -83,7 +84,12 @@ export default class Login extends React.Component {
       password: this.state.password,
     };
 
-    this.checkField(data);
+    if (!this.checkField(data)) {
+      this.setState({
+        loading: false,
+      });
+      return;
+    }
 
     let opts = {
       method: 'POST',
@@ -116,6 +122,7 @@ export default class Login extends React.Component {
           try {
             await AsyncStorage.setItem('userData', resJson);
             Actions.tabbar();
+            // Actions.replace('tabbar');
           } catch (e) {
             console.log(e);
           }
@@ -175,7 +182,6 @@ export default class Login extends React.Component {
             }}
             title="Login"
             titleStyle={{color: 'white'}}
-            type="clear"
             loading={this.state.loading}
             buttonStyle={{backgroundColor: '#ff9068'}}
           />

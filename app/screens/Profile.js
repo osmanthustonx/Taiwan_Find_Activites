@@ -80,6 +80,7 @@ export default class Activity extends React.Component {
     this.setState({
       profile: profileData,
       Name: profileData.Name,
+      Avatar: profileData.Image,
     });
     if (this.state.profile.Gender === 1) {
       this.setState({
@@ -90,7 +91,7 @@ export default class Activity extends React.Component {
         gender: 'Female',
       });
     }
-    console.log(this.state.profile);
+    console.log(profileData);
   }
   componentDidMount() {
     this.getProfileData();
@@ -107,7 +108,7 @@ export default class Activity extends React.Component {
       Password: this.state.profile.Password,
       Birth: this.state.profile.Birth,
       PasswordSalt: this.state.profile.PasswordSalt,
-      Image: '',
+      Image: this.state.Avatar,
     };
     console.log(data);
     let opts = {
@@ -159,10 +160,12 @@ export default class Activity extends React.Component {
                   size="xlarge"
                   rounded
                   source={{
-                    uri:
-                      '/Users/sunbu/Desktop/RocketFinalProject/Project/app/assets/girlAvatar.png',
+                    uri: `https://tfa.rocket-coding.com/upfiles/images/${
+                      this.state.profile.Image
+                    }`,
                   }}
                   showEditButton
+                  editButton={{size: 35}}
                 />
               ) : (
                 <Image style={styles.avatar} source={this.state.avatarSource} />
@@ -205,7 +208,6 @@ export default class Activity extends React.Component {
           <Button
             onPress={async () => {
               await this.changeProfile();
-              // await this.getProfileData();
             }}
             title="Change profile"
             titleStyle={{color: 'white'}}

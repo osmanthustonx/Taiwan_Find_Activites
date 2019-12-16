@@ -147,7 +147,7 @@ export default class Activity extends React.Component {
           <View style={{alignItems: 'center'}}>
             <Image
               source={{
-                uri: `https://tfa.rocket-coding.com/index/showdata/${
+                uri: `https://tfa.rocket-coding.com/upfiles/activitiestImage/${
                   item.Image
                 }`,
               }}
@@ -159,7 +159,12 @@ export default class Activity extends React.Component {
         <View style={styles.info}>
           <Text>{item.Name}</Text>
           <Text>{item.Place}</Text>
-          <Text>{item.StartDate + '~' + item.EndDate}</Text>
+          <Text>
+            {moment(item.StartDate).format('ll') +
+              '~' +
+              moment(item.EndDate).format('ll')}
+          </Text>
+
           <Text
             onPress={() => {
               this.addFavorite(item.Id);
@@ -234,7 +239,7 @@ export default class Activity extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={{backgroundColor: 'white'}}>
         <View style={styles.f_direction_row}>
           <RNPickerSelect
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}

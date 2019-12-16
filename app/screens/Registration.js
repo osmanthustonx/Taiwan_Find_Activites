@@ -152,55 +152,66 @@ export default class Login extends React.Component {
         fieldNameErrorMsg: 'Please fill in name',
         fieldNameErrorColor: 'red',
       });
-    } else {
-      this.setState({
-        fieldNameErrorMsg: '',
-        fieldNameErrorColor: 'white',
-      });
+      console.log('沒有名字');
+      return false;
     }
+    this.setState({
+      fieldNameErrorMsg: '',
+      fieldNameErrorColor: 'white',
+    });
+    console.log('有名字');
+
     if (data.Gender === -1) {
       this.setState({
         RadioBtnColor: 'red',
       });
-    } else {
-      this.setState({
-        RadioBtnColor: '#ffe8d6',
-      });
+      console.log('沒有性別');
+      return false;
     }
+    this.setState({
+      RadioBtnColor: '#ffe8d6',
+    });
+    console.log('有性別');
 
     if (data.Birth === moment(new Date()).format('ll')) {
       this.setState({
         birthBtnBorder: 'red',
       });
-    } else {
-      this.setState({
-        birthBtnBorder: 'white',
-      });
+      console.log('沒有生日');
+      return false;
     }
+    this.setState({
+      birthBtnBorder: 'white',
+    });
+    console.log('有生日');
 
     if (!data.Email) {
       this.setState({
         emailErrorMsg: 'Please fill in email',
         emailErrorColor: 'red',
       });
-    } else {
-      this.setState({
-        emailErrorMsg: '',
-        emailErrorColor: 'white',
-      });
+      console.log('沒有email');
+      return false;
     }
-
+    this.setState({
+      emailErrorMsg: '',
+      emailErrorColor: 'white',
+    });
+    console.log('有email');
     if (!data.Password) {
       this.setState({
         fieldPwdErrorMsg: 'Please fill in password',
         fieldPwdErrorColor: 'red',
       });
-    } else {
-      this.setState({
-        fieldPwdErrorMsg: '',
-        fieldPwdErrorColor: 'white',
-      });
+      console.log('沒有密碼');
+      return false;
     }
+    this.setState({
+      fieldPwdErrorMsg: '',
+      fieldPwdErrorColor: 'white',
+    });
+    console.log('有密碼');
+    return true;
   }
 
   /*------送API資料------*/
@@ -217,7 +228,14 @@ export default class Login extends React.Component {
       Password: this.state.password,
     };
 
-    this.checkField(data);
+    console.log(!this.checkField(data));
+
+    if (!this.checkField(data)) {
+      this.setState({
+        loading: false,
+      });
+      return;
+    }
 
     let opts = {
       method: 'POST',
