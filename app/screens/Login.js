@@ -12,6 +12,7 @@ export default class Login extends React.Component {
     password: '',
     loading: false,
     emailErrorMsg: '',
+    emailErrorColor: 'red',
     fieldPwdErrorMsg: '',
   };
 
@@ -20,10 +21,16 @@ export default class Login extends React.Component {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(text) === false) {
       console.log('Email is Not Correct');
-      this.setState({email: text});
+      this.setState({
+        emailErrorMsg: 'Email form is Not Correct',
+        emailErrorColor: 'red',
+      });
       return false;
     } else {
-      this.setState({email: text});
+      this.setState({
+        emailErrorMsg: 'Email form is Correct',
+        emailErrorColor: 'green',
+      });
       console.log('Email is Correct');
     }
   };
@@ -48,6 +55,7 @@ export default class Login extends React.Component {
       this.setState({
         emailErrorMsg: 'Please fill in your email',
       });
+      return;
     } else {
       this.setState({
         emailErrorMsg: '',
@@ -57,6 +65,7 @@ export default class Login extends React.Component {
       this.setState({
         fieldPwdErrorMsg: 'Please fill in your password',
       });
+      return;
     } else {
       this.setState({
         fieldPwdErrorMsg: '',
@@ -142,7 +151,11 @@ export default class Login extends React.Component {
             leftIcon={<Icon name="ios-mail" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
             errorMessage={this.state.emailErrorMsg}
-            onChangeText={this.onChangeLoginEmail}
+            errorStyle={{color: this.state.emailErrorColor}}
+            onChangeText={value => {
+              this.onChangeLoginEmail(value);
+              this.validate(value);
+            }}
             label="Your email address"
           />
           <View paddingVertical={10} />

@@ -13,6 +13,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
+// import 'moment/locale/zh-tw';
 
 export default class Activity extends React.Component {
   constructor(props) {
@@ -23,6 +25,7 @@ export default class Activity extends React.Component {
   state = {
     profile: '',
     avatarSource: null,
+    newPwd: '',
   };
 
   /*------圖片上傳------*/
@@ -58,16 +61,71 @@ export default class Activity extends React.Component {
     });
   }
 
+  /*-----onChange Input------*/
+  onChangeName = newName => {
+    this.setState({
+      Name: newName,
+    });
+  };
+
+  onChangePwd = newPwd => {
+    this.setState({
+      newPwd,
+    });
+  };
+
   /*------取得個人資料-------*/
   async getProfileData() {
-    let profileData = await AsyncStorage.getItem('userData');
+    let profileData = JSON.parse(await AsyncStorage.getItem('userData'));
     this.setState({
-      profile: JSON.parse(profileData),
+      profile: profileData,
+      Name: profileData.Name,
     });
+    if (this.state.profile.Gender === 1) {
+      this.setState({
+        gender: 'Male',
+      });
+    } else {
+      this.setState({
+        gender: 'Female',
+      });
+    }
     console.log(this.state.profile);
   }
   componentDidMount() {
     this.getProfileData();
+  }
+
+  /*------更換名字及密碼------*/
+  async changeProfile() {
+    let data = {
+      Id: this.state.profile.Id,
+      NewPassword: this.state.newPwd,
+      Name: this.state.Name,
+      Gender: this.state.profile.Gender,
+      Email: this.state.profile.Email,
+      Password: this.state.profile.Password,
+      Birth: this.state.profile.Birth,
+      PasswordSalt: this.state.profile.PasswordSalt,
+      Image: '',
+    };
+    console.log(data);
+    let opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    let res = await fetch(
+      'https://tfa.rocket-coding.com/Member/EditMember',
+      opts,
+    );
+    let resJson = await res.text();
+    if (resJson === '修改成功') {
+      await AsyncStorage.setItem('userData', JSON.stringify(data));
+    }
+    console.log(resJson);
   }
 
   render() {
@@ -85,70 +143,76 @@ export default class Activity extends React.Component {
             // justifyContent: 'space-around',
           }}
         />
-        <TouchableOpacity
-          onPress={this.selectPhotoTapped.bind(this)}
-          style={{alignSelf: 'center', position: 'absolute', top: 100}}>
-          <View style={[styles.avatar, styles.avatarContainer]}>
-            {this.state.avatarSource === null ? (
-              <Avatar
-                size="xlarge"
-                rounded
-                source={{
-                  uri:
-                    '/Users/sunbu/Desktop/RocketFinalProject/Project/app/assets/girlAvatar.png',
-                }}
-                showEditButton
-              />
-            ) : (
-              <Image style={styles.avatar} source={this.state.avatarSource} />
-            )}
-          </View>
-        </TouchableOpacity>
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            position: 'absolute',
+            top: 80,
+            height: '35%',
+          }}>
+          <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+            <View style={[styles.avatar, styles.avatarContainer]}>
+              {this.state.avatarSource === null ? (
+                <Avatar
+                  size="xlarge"
+                  rounded
+                  source={{
+                    uri:
+                      '/Users/sunbu/Desktop/RocketFinalProject/Project/app/assets/girlAvatar.png',
+                  }}
+                  showEditButton
+                />
+              ) : (
+                <Image style={styles.avatar} source={this.state.avatarSource} />
+              )}
+            </View>
+          </TouchableOpacity>
+          <Text style={{color: 'white'}}>{this.state.gender}</Text>
+          <Text style={{color: 'white'}}>
+            {moment(this.state.profile.Birth).format('ll')}
+          </Text>
+        </View>
         <Card
           containerStyle={{
             width: '95%',
             shadowColor: 'black',
-            shadowOffset: {width: 5, height: 5},
             shadowOpacity: 0.2,
+            shadowRadius: 9,
             alignSelf: 'center',
             position: 'absolute',
             bottom: 30,
           }}>
           <Input
-            placeholder="example@address.com"
-            leftIcon={<Icon name="ios-mail" size={24} color="#35477d" />}
+            placeholder="New name"
+            leftIcon={<Icon name="ios-person" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
-            errorMessage={this.state.emailErrorMsg}
-            onChangeText={this.onChangeLoginEmail}
-            label="Your email address"
+            label="Your name"
+            value={this.state.Name}
+            onChangeText={this.onChangeName}
           />
           <View paddingVertical={10} />
           <Input
             placeholder="Password"
             leftIcon={<Icon name="ios-lock" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
-            errorMessage={this.state.fieldPwdErrorMsg}
-            onChangeText={this.onChangeLoginPassword}
             label="Password"
             secureTextEntry={true}
+            onChangeText={this.onChangePwd}
           />
           <View paddingVertical={10} />
           <Button
-            onPress={() => {
-              this.goLogin();
+            onPress={async () => {
+              await this.changeProfile();
+              // await this.getProfileData();
             }}
-            title="Login"
+            title="Change profile"
             titleStyle={{color: 'white'}}
             type="clear"
             loading={this.state.loading}
             buttonStyle={{backgroundColor: '#ff9068'}}
           />
-          <View paddingVertical={5} />
-          <Text
-            style={{alignSelf: 'center', color: '#CDD6DA'}}
-            onPress={() => console.log('忘記密碼了ＱＱ')}>
-            Forget Password ?
-          </Text>
         </Card>
       </View>
     );

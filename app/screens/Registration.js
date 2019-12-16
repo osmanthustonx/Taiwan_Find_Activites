@@ -38,10 +38,16 @@ export default class Login extends React.Component {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(text) === false) {
       console.log('Email is Not Correct');
-      this.setState({email: text});
+      this.setState({
+        emailErrorMsg: 'Email form is Not Correct',
+        emailErrorColor: 'red',
+      });
       return false;
     } else {
-      this.setState({email: text});
+      this.setState({
+        emailErrorMsg: 'Email form is Correct',
+        emailErrorColor: 'green',
+      });
       console.log('Email is Correct');
     }
   };
@@ -312,7 +318,10 @@ export default class Login extends React.Component {
             leftIconContainerStyle={{paddingRight: 10}}
             errorMessage={this.state.emailErrorMsg}
             errorStyle={{color: this.state.emailErrorColor}}
-            onChangeText={this.onChangeEmail}
+            onChangeText={value => {
+              this.onChangeEmail(value);
+              this.validate(value);
+            }}
             onBlur={() => {
               this.checkEmail();
             }}
