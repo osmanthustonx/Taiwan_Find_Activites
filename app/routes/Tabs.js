@@ -86,7 +86,12 @@ export default class Routes extends Component {
               tabBarLabel="附近美食"
               icon={RestaurantIcon}
               titleStyle={styles.titleStyle}>
-              <Scene key="restaurant" component={Restaurant} title="附近美食" />
+              <Scene
+                key="restaurant"
+                component={Restaurant}
+                title="附近美食"
+                hideNavBar={true}
+              />
             </Stack>
             <Stack
               key="tab3"

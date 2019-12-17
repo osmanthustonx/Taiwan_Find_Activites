@@ -293,6 +293,7 @@ export default class Login extends React.Component {
               buttonColor={this.state.RadioBtnColor}
               selectedButtonColor={'#ff9068'}
               labelColor={'gray'}
+              animation={false}
             />
           </View>
           <View paddingVertical={10} />
@@ -361,7 +362,6 @@ export default class Login extends React.Component {
             title="Sign up"
             onPress={() => {
               this.goRegistration();
-              // this.test();
             }}
             buttonStyle={{backgroundColor: '#ff9068'}}
             loading={this.state.loading}

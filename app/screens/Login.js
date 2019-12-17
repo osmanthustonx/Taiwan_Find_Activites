@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Input, Button, Card} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import RadioForm from 'react-native-simple-radio-button';
 
 export default class Login extends React.Component {
   state = {
@@ -17,10 +18,8 @@ export default class Login extends React.Component {
   };
 
   validate = text => {
-    console.log(text);
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(text) === false) {
-      console.log('Email is Not Correct');
       this.setState({
         emailErrorMsg: 'Email form is Not Correct',
         emailErrorColor: 'red',
@@ -31,7 +30,6 @@ export default class Login extends React.Component {
         emailErrorMsg: 'Email form is Correct',
         emailErrorColor: 'green',
       });
-      console.log('Email is Correct');
     }
   };
 

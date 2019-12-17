@@ -26,6 +26,7 @@ const utcDateToString = (momentInUTC: moment): string => {
 export default class Favorite extends React.Component {
   state = {
     myFavorites: [],
+    refreshing: false,
   };
   static addToCalendar = (title, location, startDateUTC) => {
     const eventConfig = {
@@ -58,8 +59,8 @@ export default class Favorite extends React.Component {
     let resJson = await res.json();
     this.setState({
       myFavorites: resJson,
+      refreshing: false,
     });
-    console.log(resJson);
   }
   componentDidMount() {
     this.getFavorite();
@@ -89,13 +90,21 @@ export default class Favorite extends React.Component {
   _renderItem = ({item}) => {
     const nowUTC = moment.utc();
     return (
-      <Card>
+      <Card
+        containerStyle={{
+          marginTop: 40,
+          // width: '95%',
+          shadowColor: 'black',
+          shadowOffset: {width: 7, height: 7},
+          shadowOpacity: 0.2,
+          borderRadius: 10,
+          marginBottom: 10,
+        }}>
         <TouchableOpacity onPress={this.onPress}>
           <View
             style={{
               alignItems: 'center',
-              borderColor: 'gray',
-              borderWidth: 1,
+              borderRadius: 10,
             }}>
             <Image
               source={{
@@ -107,17 +116,18 @@ export default class Favorite extends React.Component {
             />
           </View>
         </TouchableOpacity>
+        <View paddingVertical={7} />
         <View style={styles.info}>
           <Text>{item.name}</Text>
           <View paddingVertical={4} />
-          <Text>{item.place}</Text>
-          <View paddingVertical={5} />
           <Text>
             {moment(item.StartDate).format('ll') +
               '~' +
               moment(item.EndDate).format('ll')}
           </Text>
-          <View paddingVertical={5} />
+          <View paddingVertical={4} />
+          <Text>{item.place}</Text>
+          <View paddingVertical={9} />
           <View
             style={{
               width: width / 2,
@@ -129,7 +139,7 @@ export default class Favorite extends React.Component {
                 await this.removeFavorite(item.id);
                 await this.getFavorite();
               }}>
-              <Icon name="ios-heart" size={20} />
+              <Icon name="ios-heart" size={30} style={{color: '#ff9068'}} />
             </Text>
             <Text
               onPress={() =>
@@ -139,19 +149,25 @@ export default class Favorite extends React.Component {
                   title: item.name,
                 })
               }>
-              <Icon name="ios-navigate" size={20} />
+              <Icon name="ios-navigate" size={30} style={{color: '#35477d'}} />
             </Text>
             <Text
               onPress={() => {
                 Favorite.addToCalendar(item.name, item.place, nowUTC);
               }}
               title="Add to calendar">
-              <Icon name="ios-calendar" size={20} />
+              <Icon name="ios-calendar" size={30} style={{color: '#7FCAB6'}} />
             </Text>
           </View>
         </View>
       </Card>
     );
+  };
+
+  _onRefresh = async () => {
+    console.log('onRefresh');
+    this.setState({refreshing: true});
+    await this.getFavorite();
   };
 
   _keyExtractor = (item, index) => item.id.toString();
@@ -196,6 +212,7 @@ var styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 300,
+    borderRadius: 10,
   },
   info: {
     paddingTop: 10,
