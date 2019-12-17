@@ -98,7 +98,7 @@ export default class Favorite extends React.Component {
           shadowOffset: {width: 7, height: 7},
           shadowOpacity: 0.2,
           borderRadius: 10,
-          marginBottom: 10,
+          // marginBottom: 10,
         }}>
         <TouchableOpacity onPress={this.onPress}>
           <View
