@@ -11,10 +11,12 @@ import {
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import RNPickerSelect from 'react-native-picker-select';
-import {Input, Button} from 'react-native-elements';
+import {Input, Button, Card} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Popup, showLocation} from 'react-native-map-link';
 import Geolocation from '@react-native-community/geolocation';
+import {Chevron} from 'react-native-shapes';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class Activity extends React.Component {
   onPress = () => {
@@ -126,7 +128,16 @@ export default class Activity extends React.Component {
 
   _renderItem = ({item}) => {
     return (
-      <View>
+      <Card
+        containerStyle={{
+          marginTop: 40,
+          // width: '95%',
+          shadowColor: 'black',
+          shadowOffset: {width: 7, height: 7},
+          shadowOpacity: 0.2,
+          borderRadius: 10,
+          marginBottom: 10,
+        }}>
         <TouchableOpacity onPress={this.onPress}>
           <View style={{alignItems: 'center'}}>
             <Image
@@ -137,7 +148,6 @@ export default class Activity extends React.Component {
               }}
               style={styles.image}
             />
-            <Text style={styles.label}>Press Me</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.info}>
@@ -157,7 +167,7 @@ export default class Activity extends React.Component {
             <Icon name="ios-navigate" size={20} />
           </Text>
         </View>
-      </View>
+      </Card>
     );
   };
 
@@ -165,7 +175,11 @@ export default class Activity extends React.Component {
 
   render() {
     return (
-      <View>
+      <LinearGradient
+        colors={['#bd83ce', '#ff9068']}
+        style={styles.container}
+        start={{x: 0, y: 0}}
+        end={{x: 0, y: 1}}>
         <View style={styles.f_direction_row}>
           <RNPickerSelect
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}
@@ -176,16 +190,23 @@ export default class Activity extends React.Component {
             style={{
               ...pickerSelectStyles,
               iconContainer: {
-                top: 14,
-                right: 12,
+                top: 13,
+                right: 20,
+              },
+              placeholder: {
+                color: 'white',
               },
             }}
             Icon={() => {
-              return <Icon name="md-arrow-down" size={24} color="gray" />;
+              return <Chevron size={1.5} color="white" />;
             }}
           />
           <RNPickerSelect
-            placeholder={{label: '選擇展覽館', value: null, color: '#9EA0A4'}}
+            placeholder={{
+              label: '選擇展覽館',
+              value: null,
+              color: 'white',
+            }}
             onValueChange={value => {
               this.getExhibitionData(value);
             }}
@@ -197,12 +218,15 @@ export default class Activity extends React.Component {
             style={{
               ...pickerSelectStyles,
               iconContainer: {
-                top: 14,
-                right: 12,
+                top: 13,
+                right: 20,
+              },
+              placeholder: {
+                color: 'white',
               },
             }}
             Icon={() => {
-              return <Icon name="md-arrow-down" size={24} color="gray" />;
+              return <Chevron size={1.5} color="white" />;
             }}
           />
         </View>
@@ -212,7 +236,7 @@ export default class Activity extends React.Component {
           renderItem={this._renderItem}
           onEndReachedThreshold={0.2}
         />
-      </View>
+      </LinearGradient>
     );
   }
 }
@@ -236,6 +260,12 @@ var styles = StyleSheet.create({
   },
   f_direction_row: {
     flexDirection: 'row',
+    marginTop: 40,
+    width: '100%',
+    justifyContent: 'space-around',
+  },
+  SelectGroup: {
+    marginTop: 40,
   },
   image: {
     // position: 'absolute',
@@ -249,15 +279,16 @@ const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     textAlign: 'center',
     fontSize: 20,
-    width: width / 2,
+    width: width / 2.3,
     alignSelf: 'stretch',
-    paddingVertical: 12,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: 'white',
     borderRadius: 2,
-    color: 'orange',
+    color: 'white',
     paddingRight: 30, // to ensure the text is never behind the icon
+    // backgroundColor: 'rgba(255, 255, 255,0.8)',
   },
   inputAndroid: {
     fontSize: 16,
