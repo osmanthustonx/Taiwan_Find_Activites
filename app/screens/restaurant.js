@@ -130,30 +130,37 @@ export default class Activity extends React.Component {
     return (
       <Card
         containerStyle={{
-          marginTop: 40,
-          // width: '95%',
           shadowColor: 'black',
           shadowOffset: {width: 7, height: 7},
           shadowOpacity: 0.2,
           borderRadius: 10,
           marginBottom: 10,
+          height: 160,
+          // flexDirection: 'row',
+          // justifyContent: 'space-around',
         }}>
-        <TouchableOpacity onPress={this.onPress}>
-          <View style={{alignItems: 'center'}}>
-            <Image
-              source={{
-                uri: `https://tfa.rocket-coding.com/upfiles/restaurant/${
-                  item.Photo
-                }`,
-              }}
-              style={styles.image}
-            />
-          </View>
-        </TouchableOpacity>
-        <View style={styles.info}>
+        <View style={{width: 100, position: 'absolute'}}>
+          <Image
+            source={{
+              uri: `https://tfa.rocket-coding.com/upfiles/restaurant/${
+                item.Photo
+              }`,
+            }}
+            style={styles.image}
+          />
+        </View>
+
+        <View
+          style={{
+            width: '65%',
+            alignSelf: 'flex-end',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            display: 'flex',
+          }}>
           <Text>{item.Name}</Text>
           <Text>{item.Place}</Text>
-          <Text>{item.optime}</Text>
+          <Text numberOfLines={2}>{item.optime}</Text>
           <Text>{item.tel}</Text>
           <Text>{item.DisView}</Text>
           <Text
@@ -164,7 +171,7 @@ export default class Activity extends React.Component {
                 title: item.Name,
               })
             }>
-            <Icon name="ios-navigate" size={20} />
+            <Icon name="ios-navigate" size={30} style={{color: '#35477d'}} />
           </Text>
         </View>
       </Card>
@@ -175,11 +182,7 @@ export default class Activity extends React.Component {
 
   render() {
     return (
-      <LinearGradient
-        colors={['#bd83ce', '#ff9068']}
-        style={styles.container}
-        start={{x: 0, y: 0}}
-        end={{x: 0, y: 1}}>
+      <View style={{backgroundColor: '#FFF8F6'}}>
         <View style={styles.f_direction_row}>
           <RNPickerSelect
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}
@@ -205,7 +208,7 @@ export default class Activity extends React.Component {
             placeholder={{
               label: '選擇展覽館',
               value: null,
-              color: 'white',
+              color: '#9EA0A4',
             }}
             onValueChange={value => {
               this.getExhibitionData(value);
@@ -236,7 +239,7 @@ export default class Activity extends React.Component {
           renderItem={this._renderItem}
           onEndReachedThreshold={0.2}
         />
-      </LinearGradient>
+      </View>
     );
   }
 }
@@ -260,9 +263,11 @@ var styles = StyleSheet.create({
   },
   f_direction_row: {
     flexDirection: 'row',
-    marginTop: 40,
+    paddingTop: 40,
+    paddingBottom: 20,
     width: '100%',
     justifyContent: 'space-around',
+    backgroundColor: '#FF9068',
   },
   SelectGroup: {
     marginTop: 40,
@@ -270,7 +275,7 @@ var styles = StyleSheet.create({
   image: {
     // position: 'absolute',
     width: '100%',
-    height: 300,
+    height: 100,
   },
 });
 
