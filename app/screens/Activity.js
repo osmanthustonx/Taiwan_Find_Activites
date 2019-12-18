@@ -25,11 +25,11 @@ export default class Activity extends React.Component {
     Actions.activityInfo({user: '花的世界'});
   };
   state = {
-    date: new Date(),
+    date: moment(new Date()),
     show: false,
     selectDate: '按我選擇日期',
-    nextD: 1,
-    yestD: 1,
+    nextD: 0,
+    yestD: 0,
     refreshing: false,
     area: [],
     buildingDataSource: [],
@@ -54,21 +54,28 @@ export default class Activity extends React.Component {
       show: !this.state.show,
     });
   };
-  async nex() {
-    this.setState(prevState => ({
-      yestD: 0,
-      date: moment(new Date()).add((prevState.nextD += 1), 'd'),
-    }));
-    console.log(this.state.nextD, this.state.date);
-  }
 
-  yes() {
-    this.setState(prevState => ({
-      nextD: 0,
-      date: moment(new Date()).subtract((prevState.yestD += 1), 'd'),
-    }));
-    console.log(this.state.yestD);
-  }
+  nex = async () => {
+    this.setState(
+      prevState => ({
+        yestD: 0,
+        date: moment(new Date()).add((prevState.nextD += 7), 'd'),
+      }),
+      console.log(this.state.nextD, this.state.date),
+    );
+    this.getFairData(this.state.place, this.state.city, this.state.date);
+  };
+
+  yes = async () => {
+    this.setState(
+      prevState => ({
+        nextD: 0,
+        date: moment(new Date()).subtract((prevState.yestD += 7), 'd'),
+      }),
+      console.log(this.state.yestD, this.state.date),
+    );
+    this.getFairData(this.state.place, this.state.city, this.state.date);
+  };
 
   /*------地區下拉API------*/
 
@@ -308,13 +315,12 @@ export default class Activity extends React.Component {
             }}
           />
         </View>
-        <View style={styles.f_direction_row}>
+        <View style={[styles.f_direction_row, {paddingBottom: 5}]}>
           <Button
-            title="昨天"
+            title="上週"
             type="clear"
             onPress={() => {
               this.yes();
-              console.log(this.state.date);
             }}
             style={{width: width * 0.2}}
             titleStyle={{color: 'white'}}
@@ -328,11 +334,10 @@ export default class Activity extends React.Component {
             titleStyle={{color: 'white'}}
           />
           <Button
-            title="明天"
+            title="下週"
             type="clear"
             onPress={() => {
               this.nex();
-              console.log(this.state.date);
             }}
             style={{width: width * 0.2}}
             titleStyle={{color: 'white'}}
@@ -387,7 +392,7 @@ var styles = StyleSheet.create({
   },
   selectInput: {
     paddingTop: 40,
-    paddingBottom: 5,
+    paddingBottom: 15,
     width: '100%',
     justifyContent: 'space-around',
   },

@@ -6,6 +6,7 @@ import {
   PixelRatio,
   Text,
   Image,
+  Alert,
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import {Input, Button, Card, Avatar} from 'react-native-elements';
@@ -127,6 +128,12 @@ export default class Activity extends React.Component {
       await AsyncStorage.setItem('userData', JSON.stringify(data));
     }
     console.log(resJson);
+    Alert.alert(
+      resJson,
+      '',
+      [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+      {cancelable: false},
+    );
   }
 
   render() {

@@ -168,9 +168,9 @@ export default class Activity extends React.Component {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-around',
-              width: '30%',
+              width: '70%',
             }}>
-            <Text>{item.DisView}</Text>
+            <Text>{'距離展覽約：' + item.DisView}</Text>
             <Text
               onPress={() =>
                 showLocation({
