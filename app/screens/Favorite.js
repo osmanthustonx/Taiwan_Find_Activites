@@ -93,19 +93,13 @@ export default class Favorite extends React.Component {
       <Card
         containerStyle={{
           marginTop: 40,
-          // width: '95%',
           shadowColor: 'black',
           shadowOffset: {width: 7, height: 7},
           shadowOpacity: 0.2,
           borderRadius: 10,
-          // marginBottom: 10,
         }}>
         <TouchableOpacity onPress={this.onPress}>
-          <View
-            style={{
-              alignItems: 'center',
-              borderRadius: 10,
-            }}>
+          <View>
             <Image
               source={{
                 uri: `https://tfa.rocket-coding.com/upfiles/activitiestImage/${

@@ -68,6 +68,7 @@ export default class Routes extends Component {
               titleStyle={styles.titleStyle}>
               <Scene
                 key="activity"
+                hideNavBar={true}
                 component={Activity}
                 title="最新活動"
                 titleStyle={{color: 'black'}}
@@ -76,6 +77,7 @@ export default class Routes extends Component {
                 // }}
               />
               <Scene
+                hideNavBar={true}
                 key="activityInfo"
                 component={ActivityInfo}
                 title="活動名稱"
@@ -121,14 +123,6 @@ export default class Routes extends Component {
                 component={Profile}
                 title="個人頁面"
               />
-            </Stack>
-            <Stack
-              key="test"
-              tabBarLabel="test"
-              icon={ProfileIcon}
-              titleStyle={styles.titleStyle}
-              navigationBarStyle={{paddingBottom: 10}}>
-              <Scene key="test" component={About} title="個人頁面" />
             </Stack>
           </Tabs>
         </Stack>

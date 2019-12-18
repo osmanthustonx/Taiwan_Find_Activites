@@ -12,7 +12,7 @@ import {Actions} from 'react-native-router-flux';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNPickerSelect from 'react-native-picker-select';
-import {Input, Button} from 'react-native-elements';
+import {Input, Button, Card} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
@@ -142,9 +142,17 @@ export default class Activity extends React.Component {
   /*------FlastList------*/
   _renderItem = ({item}) => {
     return (
-      <View>
+      <Card
+        containerStyle={{
+          width: '90.5%',
+          marginTop: 40,
+          shadowColor: 'black',
+          shadowOffset: {width: 7, height: 7},
+          shadowOpacity: 0.2,
+          borderRadius: 10,
+        }}>
         <TouchableOpacity onPress={this.onPress}>
-          <View style={{alignItems: 'center'}}>
+          <View>
             <Image
               source={{
                 uri: `https://tfa.rocket-coding.com/upfiles/activitiestImage/${
@@ -153,38 +161,49 @@ export default class Activity extends React.Component {
               }}
               style={styles.image}
             />
-            <Text style={styles.label}>Press Me</Text>
           </View>
         </TouchableOpacity>
+        <View paddingVertical={7} />
         <View style={styles.info}>
           <Text>{item.Name}</Text>
-          <Text>{item.Place}</Text>
+          <View paddingVertical={4} />
           <Text>
             {moment(item.StartDate).format('ll') +
               '~' +
               moment(item.EndDate).format('ll')}
           </Text>
-
-          <Text
-            onPress={() => {
-              this.addFavorite(item.Id);
-              item.Name = '測試'; // 要新增欄位
-              console.log(item);
+          <View paddingVertical={4} />
+          <Text>{item.Place}</Text>
+          <View paddingVertical={9} />
+          <View
+            style={{
+              width: width / 2,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
             }}>
-            <Icon name="ios-heart-empty" size={20} />
-          </Text>
-          <Text
-            onPress={() =>
-              showLocation({
-                latitude: item.Latitude,
-                longitude: item.Longitude,
-                title: item.Name,
-              })
-            }>
-            <Icon name="ios-navigate" size={20} />
-          </Text>
+            <Text
+              onPress={() => {
+                this.addFavorite(item.Id);
+              }}>
+              <Icon
+                name="ios-heart-empty"
+                size={30}
+                style={{color: '#ff9068'}}
+              />
+            </Text>
+            <Text
+              onPress={() =>
+                showLocation({
+                  latitude: item.Latitude,
+                  longitude: item.Longitude,
+                  title: item.Name,
+                })
+              }>
+              <Icon name="ios-navigate" size={30} style={{color: '#35477d'}} />
+            </Text>
+          </View>
         </View>
-      </View>
+      </Card>
     );
   };
 
@@ -239,7 +258,11 @@ export default class Activity extends React.Component {
 
   render() {
     return (
-      <View style={{backgroundColor: 'white'}}>
+      <LinearGradient
+        colors={['#bd83ce', '#ff9068']}
+        style={styles.container}
+        start={{x: 1, y: 1}}
+        end={{x: 0, y: 0}}>
         <View style={styles.f_direction_row}>
           <RNPickerSelect
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}
@@ -324,9 +347,11 @@ export default class Activity extends React.Component {
               is24Hour={true}
               display="default"
               onChange={this.setDate}
+              locale="zh-tw"
             />
           )}
         </View>
+
         <FlatList
           keyExtractor={this._keyExtractor}
           data={this.state.fairData}
@@ -335,7 +360,7 @@ export default class Activity extends React.Component {
           onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
         />
-      </View>
+      </LinearGradient>
     );
   }
 }
@@ -371,6 +396,7 @@ var styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 300,
+    borderRadius: 10,
   },
   title: {
     fontSize: 48,
@@ -379,7 +405,10 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 3,
   },
-  info: {backgroundColor: '#cccccc', width: width, height: 300},
+  info: {
+    paddingTop: 10,
+    alignItems: 'center',
+  },
 });
 
 const pickerSelectStyles = StyleSheet.create({

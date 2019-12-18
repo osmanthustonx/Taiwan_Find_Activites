@@ -327,6 +327,7 @@ export default class Login extends React.Component {
                 is24Hour={true}
                 display="default"
                 onChange={this.onChangeBirth}
+                locale="zh-tw"
               />
             )}
           </View>
