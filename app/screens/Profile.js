@@ -3,7 +3,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  PixelRatio,
+  Platform,
   Text,
   Image,
   Alert,
@@ -32,6 +32,7 @@ export default class Activity extends React.Component {
   /*------圖片上傳------*/
   selectPhotoTapped() {
     const options = {
+      title: 'Select avatar',
       quality: 1.0,
       maxWidth: 500,
       maxHeight: 500,
@@ -43,20 +44,25 @@ export default class Activity extends React.Component {
     ImagePicker.showImagePicker(options, response => {
       console.log('Response = ', response);
 
-      if (response.didCancel) {
-        console.log('User cancelled photo picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        let source = {uri: response.uri};
+      // if (response.didCancel) {
+      //   console.log('User cancelled photo picker');
+      // } else if (response.error) {
+      //   console.log('ImagePicker Error: ', response.error);
+      // } else if (response.customButton) {
+      //   console.log('User tapped custom button: ', response.customButton);
+      // } else {
+      //   let source = {uri: response};
 
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      //   // You can also display the image using data:
+      //   // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
+      //   this.setState({
+      //     avatarSource: source,
+      //   });
+      // }
+      if (response.uri) {
         this.setState({
-          avatarSource: source,
+          avatarSource: response,
         });
       }
     });
@@ -98,7 +104,33 @@ export default class Activity extends React.Component {
     this.getProfileData();
   }
 
-  /*------更換名字及密碼------*/
+  /*------更換名字及密碼及頭像------*/
+
+  createFormData = (avatar, body) => {
+    const data = new FormData();
+
+    console.log(avatar);
+
+    if (avatar != null) {
+      data.append('upfile', {
+        name: avatar.fileName,
+        type: avatar.type,
+        uri:
+          Platform.OS === 'ios'
+            ? avatar.uri
+            : avatar.uri.replace('file://', ''),
+      });
+    } else {
+      data.append('upfile', '');
+    }
+
+    Object.keys(body).forEach(key => {
+      data.append(key, body[key]);
+    });
+
+    return data;
+  };
+
   async changeProfile() {
     let data = {
       Id: this.state.profile.Id,
@@ -111,29 +143,40 @@ export default class Activity extends React.Component {
       PasswordSalt: this.state.profile.PasswordSalt,
       Image: this.state.Avatar,
     };
-    console.log(data);
-    let opts = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    };
-    let res = await fetch(
-      'https://tfa.rocket-coding.com/Member/EditMember',
-      opts,
+    // console.log(data);
+    console.log(
+      this.createFormData(this.state.avatarSource, {
+        Id: this.state.profile.Id,
+        NewPassword: this.state.newPwd,
+        Name: this.state.Name,
+        Gender: this.state.profile.Gender,
+        Email: this.state.profile.Email,
+        Password: this.state.profile.Password,
+        Birth: this.state.profile.Birth,
+        PasswordSalt: this.state.profile.PasswordSalt,
+      }),
     );
-    let resJson = await res.text();
-    if (resJson === '修改成功') {
-      await AsyncStorage.setItem('userData', JSON.stringify(data));
-    }
-    console.log(resJson);
-    Alert.alert(
-      resJson,
-      '',
-      [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-      {cancelable: false},
-    );
+    // let opts = {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(data),
+    // };
+    // let res = await fetch(
+    //   'https://tfa.rocket-coding.com/Member/EditMember',
+    //   opts,
+    // );
+    // let resJson = await res.text();
+    // if (resJson === '修改成功') {
+    //   await AsyncStorage.setItem('userData', JSON.stringify(data));
+    // }
+    // Alert.alert(
+    //   resJson,
+    //   '',
+    //   [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+    //   {cancelable: false},
+    // );
   }
 
   render() {
@@ -221,6 +264,11 @@ export default class Activity extends React.Component {
             type="clear"
             loading={this.state.loading}
             buttonStyle={{backgroundColor: '#ff9068'}}
+          />
+          <Button
+            onPress={() => {
+              console.log(this.state.avatarSource);
+            }}
           />
         </Card>
       </View>

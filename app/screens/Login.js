@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, StyleSheet, Text, Alert} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Input, Button, Card} from 'react-native-elements';
+import {Input, Button, Card, Overlay, Text} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import RadioForm from 'react-native-simple-radio-button';
@@ -15,6 +15,11 @@ export default class Login extends React.Component {
     emailErrorMsg: '',
     emailErrorColor: 'red',
     fieldPwdErrorMsg: '',
+    forgetVisible: false,
+    forgetEmail: '',
+    forgetEmailErrorMsg: '',
+    forgetName: '',
+    forgetNameMsg: '',
   };
 
   validate = text => {
@@ -33,6 +38,19 @@ export default class Login extends React.Component {
     }
   };
 
+  forgetEmailValidate = text => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(text) === false) {
+      this.setState({
+        forgetEmailErrorMsg: 'Email form is Not Correct',
+      });
+    } else {
+      this.setState({
+        forgetEmailErrorMsg: '',
+      });
+    }
+  };
+
   // 登入信箱Input
   onChangeLoginEmail = email => {
     this.setState({
@@ -46,6 +64,59 @@ export default class Login extends React.Component {
       password,
     });
   };
+
+  //忘記信箱
+  onChangeForgetEmail = forgetEmail => {
+    this.setState({
+      forgetEmail,
+    });
+  };
+
+  //忘記名子
+  onChangeForgetName = forgetName => {
+    this.setState({forgetName});
+  };
+
+  /*------忘記密碼API------*/
+  async forgetPwd() {
+    let data = {
+      mail: this.state.forgetEmail,
+      name: this.state.forgetName,
+    };
+
+    let opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+
+    try {
+      let res = await fetch(
+        'https://tfa.rocket-coding.com//Member/forgetPassword',
+        opts,
+      );
+      let resJson = await res.text();
+
+      Alert.alert(
+        resJson,
+        '',
+        [
+          {
+            text: 'OK',
+            onPress: () =>
+              this.setState({
+                forgetVisible: false,
+              }),
+          },
+        ],
+        {cancelable: false},
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   /*-----驗證資料填寫------*/
   checkField(data) {
@@ -186,13 +257,16 @@ export default class Login extends React.Component {
           <View paddingVertical={5} />
           <Text
             style={{alignSelf: 'center', color: '#CDD6DA'}}
-            onPress={() => console.log('忘記密碼了ＱＱ')}>
+            onPress={() => {
+              this.setState({
+                forgetVisible: !this.state.forgetVisible,
+              });
+              console.log(this.state.forgetVisible);
+            }}>
             Forget Password ?
           </Text>
         </Card>
-
         <View paddingVertical={10} />
-
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={{color: '#e4e4e4', fontSize: 15, marginRight: 0}}>
             Don't have an account ？
@@ -205,6 +279,56 @@ export default class Login extends React.Component {
             Sign up
           </Text>
         </View>
+        <Overlay
+          isVisible={this.state.forgetVisible}
+          windowBackgroundColor="rgba(0, 0, 0, .4)"
+          overlayBackgroundColor="white"
+          borderRadius={10}
+          width="85%"
+          height="45%"
+          children={Input}
+          onBackdropPress={() => {
+            this.setState({
+              forgetVisible: !this.state.forgetVisible,
+            });
+          }}>
+          <View style={{alignItems: 'center'}}>
+            <Text h4>Forget Password</Text>
+            <View paddingVertical={10} />
+            <Input
+              placeholder="example@address.com"
+              leftIcon={<Icon name="ios-mail" size={24} color="#35477d" />}
+              leftIconContainerStyle={{paddingRight: 10}}
+              errorMessage={this.state.forgetEmailErrorMsg}
+              onChangeText={value => {
+                this.onChangeForgetEmail(value);
+                this.forgetEmailValidate(value);
+              }}
+              label="Your email address"
+            />
+            <View paddingVertical={10} />
+            <Input
+              placeholder="Name"
+              leftIcon={<Icon name="ios-person" size={24} color="#35477d" />}
+              leftIconContainerStyle={{paddingRight: 10}}
+              errorMessage={this.state.forgetNameMsg}
+              onChangeText={value => {
+                this.onChangeForgetName(value);
+              }}
+              label="Your name"
+            />
+            <View paddingVertical={10} />
+            <Button
+              onPress={() => {
+                this.forgetPwd();
+              }}
+              title="Confirm"
+              titleStyle={{color: 'white'}}
+              loading={this.state.loading}
+              buttonStyle={{backgroundColor: '#ff9068', width: '100%'}}
+            />
+          </View>
+        </Overlay>
       </LinearGradient>
     );
   }
