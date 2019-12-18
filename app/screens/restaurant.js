@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   FlatList,
   Dimensions,
@@ -11,7 +10,7 @@ import {
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import RNPickerSelect from 'react-native-picker-select';
-import {Input, Button, Card} from 'react-native-elements';
+import {Input, Button, Card, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Popup, showLocation} from 'react-native-map-link';
 import Geolocation from '@react-native-community/geolocation';
@@ -158,21 +157,31 @@ export default class Activity extends React.Component {
             justifyContent: 'center',
             display: 'flex',
           }}>
-          <Text>{item.Name}</Text>
+          <Text h1 h1Style={{fontSize: 20}}>
+            {item.Name}
+          </Text>
           <Text>{item.Place}</Text>
           <Text numberOfLines={2}>{item.optime}</Text>
           <Text>{item.tel}</Text>
-          <Text>{item.DisView}</Text>
-          <Text
-            onPress={() =>
-              showLocation({
-                latitude: item.lat,
-                longitude: item.lng,
-                title: item.Name,
-              })
-            }>
-            <Icon name="ios-navigate" size={30} style={{color: '#35477d'}} />
-          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+              width: '30%',
+            }}>
+            <Text>{item.DisView}</Text>
+            <Text
+              onPress={() =>
+                showLocation({
+                  latitude: item.lat,
+                  longitude: item.lng,
+                  title: item.Name,
+                })
+              }>
+              <Icon name="ios-navigate" size={25} style={{color: '#35477d'}} />
+            </Text>
+          </View>
         </View>
       </Card>
     );

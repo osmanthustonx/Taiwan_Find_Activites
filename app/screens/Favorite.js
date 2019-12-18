@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
@@ -9,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import {Input, Button, Card} from 'react-native-elements';
+import {Input, Button, Card, Text} from 'react-native-elements';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Popup, showLocation} from 'react-native-map-link';
@@ -112,7 +111,9 @@ export default class Favorite extends React.Component {
         </TouchableOpacity>
         <View paddingVertical={7} />
         <View style={styles.info}>
-          <Text>{item.name}</Text>
+          <Text h1 h1Style={{fontSize: 20}}>
+            {item.name}
+          </Text>
           <View paddingVertical={4} />
           <Text>
             {moment(item.StartDate).format('ll') +

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   FlatList,
   Dimensions,
@@ -12,13 +11,14 @@ import {Actions} from 'react-native-router-flux';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNPickerSelect from 'react-native-picker-select';
-import {Input, Button, Card} from 'react-native-elements';
+import {Input, Button, Card, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Popup, showLocation} from 'react-native-map-link';
 import LinearGradient from 'react-native-linear-gradient';
+import {Chevron} from 'react-native-shapes';
 
 export default class Activity extends React.Component {
   onPress = () => {
@@ -28,8 +28,8 @@ export default class Activity extends React.Component {
     date: new Date(),
     show: false,
     selectDate: '按我選擇日期',
-    nextD: 0,
-    yestD: 0,
+    nextD: 1,
+    yestD: 1,
     refreshing: false,
     area: [],
     buildingDataSource: [],
@@ -37,14 +37,14 @@ export default class Activity extends React.Component {
     fairData: [],
     place: '',
     city: '',
+    haveLike: '-empty',
   };
 
   setDate = (event, date) => {
     date = date || this.state.date;
-    console.log(date);
     this.setState({
       date,
-      selectDate: JSON.stringify(moment(date).format('ll')),
+      selectDate: moment(date).format('ll'),
     });
     this.getFairData(this.state.city, this.state.place, date);
   };
@@ -54,20 +54,21 @@ export default class Activity extends React.Component {
       show: !this.state.show,
     });
   };
-  nex = () => {
+  async nex() {
     this.setState(prevState => ({
       yestD: 0,
       date: moment(new Date()).add((prevState.nextD += 1), 'd'),
     }));
-  };
+    console.log(this.state.nextD, this.state.date);
+  }
 
-  yes = () => {
+  yes() {
     this.setState(prevState => ({
       nextD: 0,
       date: moment(new Date()).subtract((prevState.yestD += 1), 'd'),
     }));
     console.log(this.state.yestD);
-  };
+  }
 
   /*------地區下拉API------*/
 
@@ -104,12 +105,12 @@ export default class Activity extends React.Component {
   /*------展覽內容API------*/
 
   async getFairData(place = '', city = '', date = this.state.date) {
-    let userData = JSON.parse(await AsyncStorage.getItem('userData'));
+    let userId = JSON.parse(await AsyncStorage.getItem('userData')).Id;
     let data = {
       place: this.state.place,
       city: this.state.city,
       date,
-      MemberID: userData.Id,
+      MemberID: userId,
     };
     let opts = {
       method: 'POST',
@@ -124,9 +125,9 @@ export default class Activity extends React.Component {
         'https://tfa.rocket-coding.com/index/showdata',
         opts,
       );
-      let resJson = await res.json();
+      let fairDataJson = await res.json();
       this.setState({
-        fairData: resJson,
+        fairData: fairDataJson,
         refreshing: false,
       });
     } catch (error) {
@@ -138,14 +139,14 @@ export default class Activity extends React.Component {
     this.getSelectData();
     this.getFairData();
   }
+  UNSAFE_componentWillMount() {}
 
   /*------FlastList------*/
   _renderItem = ({item}) => {
     return (
       <Card
         containerStyle={{
-          width: '90.5%',
-          marginTop: 40,
+          width: '92%',
           shadowColor: 'black',
           shadowOffset: {width: 7, height: 7},
           shadowOpacity: 0.2,
@@ -165,7 +166,9 @@ export default class Activity extends React.Component {
         </TouchableOpacity>
         <View paddingVertical={7} />
         <View style={styles.info}>
-          <Text>{item.Name}</Text>
+          <Text h1 h1Style={{fontSize: 20}}>
+            {item.Name}
+          </Text>
           <View paddingVertical={4} />
           <Text>
             {moment(item.StartDate).format('ll') +
@@ -182,11 +185,12 @@ export default class Activity extends React.Component {
               justifyContent: 'space-around',
             }}>
             <Text
-              onPress={() => {
-                this.addFavorite(item.Id);
+              onPress={async () => {
+                await this.addFavorite(item.Id);
+                await this.getFairData();
               }}>
               <Icon
-                name="ios-heart-empty"
+                name={`ios-heart${item.IsFavorite}`}
                 size={30}
                 style={{color: '#ff9068'}}
               />
@@ -218,52 +222,36 @@ export default class Activity extends React.Component {
   /*------我的最愛API------*/
   async addFavorite(EId) {
     let userData = JSON.parse(await AsyncStorage.getItem('userData'));
-    // var data = JSON.stringify({
-    //   MId: userData.Id,
-    //   EId,
-    // });
-    // let opts = {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: data,
-    // };
-    // try {
-    //   let res = await fetch(
-    //     'https://tfa.rocket-coding.com/Index/AddFavorite',
-    //     opts,
-    //   );
-    //   let resJson = await JSON.parse(res);
-    //   // console.log(resJson);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    /*--------------------------------*/
     var data = JSON.stringify({
       MId: userData.Id,
       EId,
     });
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-    xhr.addEventListener('readystatechange', function() {
-      if (this.readyState === 4) {
-        console.log(this.responseText);
-      }
-    });
-    xhr.open('POST', 'https://tfa.rocket-coding.com/Index/AddFavorite');
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(data);
+    let opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    };
+    try {
+      let res = await fetch(
+        'https://tfa.rocket-coding.com/Index/AddFavorite',
+        opts,
+      );
+      let resJson = await res.text();
+      console.log(resJson);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   render() {
     return (
       <LinearGradient
         colors={['#bd83ce', '#ff9068']}
-        style={styles.container}
         start={{x: 1, y: 1}}
         end={{x: 0, y: 0}}>
-        <View style={styles.f_direction_row}>
+        <View style={[styles.f_direction_row, styles.selectInput]}>
           <RNPickerSelect
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}
             onValueChange={value => {
@@ -279,12 +267,15 @@ export default class Activity extends React.Component {
             style={{
               ...pickerSelectStyles,
               iconContainer: {
-                top: 14,
-                right: 12,
+                top: 13,
+                right: 20,
+              },
+              placeholder: {
+                color: 'white',
               },
             }}
             Icon={() => {
-              return <Icon name="md-arrow-down" size={24} color="gray" />;
+              return <Chevron size={1.5} color="white" />;
             }}
           />
           <RNPickerSelect
@@ -305,12 +296,15 @@ export default class Activity extends React.Component {
             style={{
               ...pickerSelectStyles,
               iconContainer: {
-                top: 14,
-                right: 12,
+                top: 13,
+                right: 20,
+              },
+              placeholder: {
+                color: 'white',
               },
             }}
             Icon={() => {
-              return <Icon name="md-arrow-down" size={24} color="gray" />;
+              return <Chevron size={1.5} color="white" />;
             }}
           />
         </View>
@@ -323,11 +317,15 @@ export default class Activity extends React.Component {
               console.log(this.state.date);
             }}
             style={{width: width * 0.2}}
+            titleStyle={{color: 'white'}}
           />
           <Button
             onPress={this.datepicker}
             title={this.state.selectDate}
+            type="outline"
             style={{width: width * 0.6}}
+            buttonStyle={{borderColor: 'white'}}
+            titleStyle={{color: 'white'}}
           />
           <Button
             title="明天"
@@ -337,20 +335,20 @@ export default class Activity extends React.Component {
               console.log(this.state.date);
             }}
             style={{width: width * 0.2}}
+            titleStyle={{color: 'white'}}
           />
         </View>
-        <View>
-          {this.state.show && (
-            <DateTimePicker
-              value={this.state.date}
-              mode={'date'}
-              is24Hour={true}
-              display="default"
-              onChange={this.setDate}
-              locale="zh-tw"
-            />
-          )}
-        </View>
+
+        {this.state.show && (
+          <DateTimePicker
+            value={this.state.date}
+            mode={'date'}
+            is24Hour={true}
+            display="default"
+            onChange={this.setDate}
+            locale="zh-tw"
+          />
+        )}
 
         <FlatList
           keyExtractor={this._keyExtractor}
@@ -387,7 +385,12 @@ var styles = StyleSheet.create({
   f_direction_row: {
     flexDirection: 'row',
   },
-
+  selectInput: {
+    paddingTop: 40,
+    paddingBottom: 5,
+    width: '100%',
+    justifyContent: 'space-around',
+  },
   listItem: {
     height: height - 200,
     justifyContent: 'flex-start',
@@ -415,14 +418,14 @@ const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     textAlign: 'center',
     fontSize: 20,
-    width: width / 2,
+    width: width / 2.3,
     alignSelf: 'stretch',
-    paddingVertical: 12,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: 'white',
     borderRadius: 2,
-    color: 'orange',
+    color: 'white',
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   inputAndroid: {

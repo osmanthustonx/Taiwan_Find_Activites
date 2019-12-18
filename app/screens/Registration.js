@@ -81,7 +81,7 @@ export default class Login extends React.Component {
     birth = birth || this.state.birth;
     this.setState({
       birth,
-      displayBirthDay: JSON.stringify(moment(birth).format('ll')),
+      displayBirthDay: moment(birth).format('ll'),
     });
   };
 
