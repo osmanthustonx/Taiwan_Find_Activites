@@ -21,8 +21,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Chevron} from 'react-native-shapes';
 
 export default class Activity extends React.Component {
-  onPress = () => {
-    Actions.activityInfo({user: '花的世界'});
+  onPress = EId => {
+    Actions.activityInfo({EId});
   };
   state = {
     date: moment(new Date()),
@@ -148,7 +148,7 @@ export default class Activity extends React.Component {
   }
   UNSAFE_componentWillMount() {}
 
-  /*------FlastList------*/
+  /*------FlatList------*/
   _renderItem = ({item}) => {
     return (
       <Card
@@ -159,7 +159,10 @@ export default class Activity extends React.Component {
           shadowOpacity: 0.2,
           borderRadius: 10,
         }}>
-        <TouchableOpacity onPress={this.onPress}>
+        <TouchableOpacity
+          onPress={() => {
+            this.onPress(item.Id);
+          }}>
           <View>
             <Image
               source={{
