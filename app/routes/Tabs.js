@@ -62,7 +62,7 @@ export default class Routes extends Component {
             navigationBarStyle={{backgroundColor: 'white'}}
             showLabel={false}>
             <Stack
-              key="tab1"
+              key="activityStack"
               tabBarLabel="活動"
               icon={ActivityIcon}
               titleStyle={styles.titleStyle}>
@@ -84,7 +84,7 @@ export default class Routes extends Component {
               />
             </Stack>
             <Stack
-              key="tab2"
+              key="restaurantStack"
               tabBarLabel="附近美食"
               icon={RestaurantIcon}
               titleStyle={styles.titleStyle}>
@@ -96,7 +96,7 @@ export default class Routes extends Component {
               />
             </Stack>
             <Stack
-              key="tab3"
+              key="favoriteStack"
               tabBarLabel="我的收藏"
               icon={FavoriteIcon}
               titleStyle={styles.titleStyle}>
@@ -113,7 +113,7 @@ export default class Routes extends Component {
               />
             </Stack>
             <Stack
-              key="profile"
+              key="profileStack"
               tabBarLabel="個人頁面"
               icon={ProfileIcon}
               titleStyle={styles.titleStyle}>

@@ -27,6 +27,7 @@ export default class Activity extends React.Component {
     profile: '',
     avatarSource: null,
     newPwd: '',
+    changeNameMsg: '',
   };
 
   /*------圖片上傳------*/
@@ -106,10 +107,19 @@ export default class Activity extends React.Component {
 
   /*------更換名字及密碼及頭像------*/
 
+  // 欄位 check
+  checkForm() {
+    if (!this.state.Name) {
+      this.setState({
+        changeNameMsg: 'Can not be blank',
+      });
+      return true;
+    }
+    return false;
+  }
+
   createFormData = (avatar, body) => {
     const data = new FormData();
-
-    console.log(avatar);
 
     if (avatar != null) {
       data.append('upfile', {
@@ -132,7 +142,7 @@ export default class Activity extends React.Component {
   };
 
   async changeProfile() {
-    let data = {
+    let data = this.createFormData(this.state.avatarSource, {
       Id: this.state.profile.Id,
       NewPassword: this.state.newPwd,
       Name: this.state.Name,
@@ -141,42 +151,37 @@ export default class Activity extends React.Component {
       Password: this.state.profile.Password,
       Birth: this.state.profile.Birth,
       PasswordSalt: this.state.profile.PasswordSalt,
-      Image: this.state.Avatar,
+    });
+    let opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data,
     };
-    // console.log(data);
-    console.log(
-      this.createFormData(this.state.avatarSource, {
-        Id: this.state.profile.Id,
-        NewPassword: this.state.newPwd,
-        Name: this.state.Name,
-        Gender: this.state.profile.Gender,
-        Email: this.state.profile.Email,
-        Password: this.state.profile.Password,
-        Birth: this.state.profile.Birth,
-        PasswordSalt: this.state.profile.PasswordSalt,
-      }),
-    );
-    // let opts = {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(data),
-    // };
-    // let res = await fetch(
-    //   'https://tfa.rocket-coding.com/Member/EditMember',
-    //   opts,
-    // );
-    // let resJson = await res.text();
-    // if (resJson === '修改成功') {
-    //   await AsyncStorage.setItem('userData', JSON.stringify(data));
-    // }
-    // Alert.alert(
-    //   resJson,
-    //   '',
-    //   [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-    //   {cancelable: false},
-    // );
+    if (this.checkForm()) {
+      return;
+    }
+
+    try {
+      let res = await fetch(
+        'https://tfa.rocket-coding.com/Member/EditMember',
+        opts,
+      );
+      let resJson = await res.text();
+      console.log(JSON.parse(resJson));
+      if (resJson !== '有錯誤') {
+        await AsyncStorage.setItem('userData', resJson);
+        Alert.alert(
+          '修改成功',
+          '',
+          [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+          {cancelable: false},
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   render() {
@@ -241,6 +246,7 @@ export default class Activity extends React.Component {
             placeholder="New name"
             leftIcon={<Icon name="ios-person" size={24} color="#35477d" />}
             leftIconContainerStyle={{paddingRight: 10}}
+            errorMessage={this.state.changeNameMsg}
             label="Your name"
             value={this.state.Name}
             onChangeText={this.onChangeName}
@@ -264,11 +270,6 @@ export default class Activity extends React.Component {
             type="clear"
             loading={this.state.loading}
             buttonStyle={{backgroundColor: '#ff9068'}}
-          />
-          <Button
-            onPress={() => {
-              console.log(this.state.avatarSource);
-            }}
           />
         </Card>
       </View>
