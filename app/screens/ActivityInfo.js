@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import AsyncStorage from '@react-native-community/async-storage';
+import {Input, Button, Card, Text} from 'react-native-elements';
 
 export default class ActivityInfo extends React.Component {
   state = {

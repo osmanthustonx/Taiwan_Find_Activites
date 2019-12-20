@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-import {Router, Stack, Scene, Tabs} from 'react-native-router-flux';
+import {Router, Stack, Scene, Tabs, Actions} from 'react-native-router-flux';
 import AsyncStorage from '@react-native-community/async-storage';
 
 /*------ICON------*/
@@ -38,14 +38,7 @@ export default class Routes extends Component {
         <Stack key="root">
           {this.state.isLoginShow && (
             <Stack hideNavBar={true}>
-              <Scene
-                key="login"
-                component={Login}
-                title="登入"
-                // onExit={() => {
-                //   this.leftLogin();
-                // }}
-              />
+              <Scene key="login" component={Login} title="登入" />
               <Scene
                 hideNavBar={true}
                 key="registered"
@@ -60,7 +53,8 @@ export default class Routes extends Component {
             key="tabbar" // 在 Tabs 的 key(tabbar) 可以讓 login 完之後，可以透過 action.tabbar，讓你的應用切換到這個 tabbar 的場景當中
             tabBarPosition="bottom" // default 'bottom' on ios, 'top' on android
             navigationBarStyle={{backgroundColor: 'white'}}
-            showLabel={false}>
+            showLabel={false}
+            lazy={true}>
             <Stack
               key="activityStack"
               tabBarLabel="活動"
@@ -72,9 +66,9 @@ export default class Routes extends Component {
                 component={Activity}
                 title="最新活動"
                 titleStyle={{color: 'black'}}
-                // onEnter={() => {
-                //   this.leftLogin();
-                // }}
+                onEnter={() => {
+                  Actions.refresh({key: Math.random()});
+                }}
               />
               <Scene
                 hideNavBar={true}
@@ -105,6 +99,9 @@ export default class Routes extends Component {
                 component={Favorite}
                 title="我的收藏"
                 hideNavBar={true}
+                onEnter={() => {
+                  Actions.refresh({key: Math.random()});
+                }}
               />
               <Scene
                 key="activityInfo"

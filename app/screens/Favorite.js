@@ -65,6 +65,10 @@ export default class Favorite extends React.Component {
     this.getFavorite();
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+  }
+
   /*------取消我的最愛------*/
   async removeFavorite(eId) {
     let memberId = JSON.parse(await AsyncStorage.getItem('userData')).Id;
@@ -166,7 +170,6 @@ export default class Favorite extends React.Component {
   };
 
   _keyExtractor = (item, index) => item.id.toString();
-
   render() {
     return (
       <LinearGradient
