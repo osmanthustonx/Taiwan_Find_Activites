@@ -134,7 +134,7 @@ export default class Activity extends React.Component {
           shadowOpacity: 0.2,
           borderRadius: 10,
           marginBottom: 10,
-          height: 160,
+          height: 180,
           // flexDirection: 'row',
           // justifyContent: 'space-around',
         }}>
@@ -170,7 +170,7 @@ export default class Activity extends React.Component {
               justifyContent: 'space-around',
               width: '70%',
             }}>
-            <Text>{'距離展覽約：' + item.DisView}</Text>
+            <Text>{'距離展覽約：' + item.DisView + ' '}</Text>
             <Text
               onPress={() =>
                 showLocation({

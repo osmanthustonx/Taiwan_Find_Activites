@@ -19,6 +19,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Popup, showLocation} from 'react-native-map-link';
 import LinearGradient from 'react-native-linear-gradient';
 import {Chevron} from 'react-native-shapes';
+import * as AddCalendarEvent from 'react-native-add-calendar-event';
+
+const utcDateToString = (momentInUTC: moment): string => {
+  let s = moment.utc(momentInUTC).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+  // console.warn(s);
+  return s;
+};
 
 export default class Activity extends React.Component {
   onPress = EId => {
@@ -38,6 +45,28 @@ export default class Activity extends React.Component {
     place: '',
     city: '',
     haveLike: '-empty',
+  };
+
+  static addToCalendar = (title, location, startDateUTC) => {
+    const eventConfig = {
+      title,
+      location,
+      startDate: utcDateToString(startDateUTC),
+      endDate: utcDateToString(moment.utc(startDateUTC).add(1, 'hours')),
+    };
+
+    AddCalendarEvent.presentEventCreatingDialog(eventConfig)
+      .then(eventInfo => {
+        // handle success - receives an object with `calendarItemIdentifier` and `eventIdentifier` keys, both of type string.
+        // These are two different identifiers on iOS.
+        // On Android, where they are both equal and represent the event id, also strings.
+        // when { action: 'CANCELED' } is returned, the dialog was dismissed
+        console.warn(JSON.stringify(eventInfo));
+      })
+      .catch(error => {
+        // handle error such as when user rejected permissions
+        console.warn(error);
+      });
   };
 
   setDate = (event, date) => {
@@ -146,10 +175,10 @@ export default class Activity extends React.Component {
     this.getSelectData();
     this.getFairData();
   }
-  UNSAFE_componentWillMount() {}
 
   /*------FlatList------*/
   _renderItem = ({item}) => {
+    const nowUTC = moment.utc();
     return (
       <Card
         containerStyle={{
@@ -214,6 +243,13 @@ export default class Activity extends React.Component {
                 })
               }>
               <Icon name="ios-navigate" size={30} style={{color: '#35477d'}} />
+            </Text>
+            <Text
+              onPress={() => {
+                Activity.addToCalendar(item.name, item.place, nowUTC);
+              }}
+              title="Add to calendar">
+              <Icon name="ios-calendar" size={30} style={{color: '#7FCAB6'}} />
             </Text>
           </View>
         </View>

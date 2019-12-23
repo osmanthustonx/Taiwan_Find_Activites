@@ -5,7 +5,7 @@ import {Actions} from 'react-native-router-flux';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import moment from 'moment';
 import {Card} from 'react-native-elements';
-import {Rating} from 'react-native-ratings';
+import {Rating, AirbnbRating} from 'react-native-ratings';
 import {Popup, showLocation} from 'react-native-map-link';
 
 const utcDateToString = (momentInUTC: moment): string => {
@@ -35,11 +35,10 @@ export default class About extends React.Component {
     return (
       <View style={styles.container}>
         <Card title="WITH FRACTIONS" containerStyle={styles.card}>
-          <Rating
+          <AirbnbRating
             showRating={true}
-            fractions={1}
             ratingTextColor="teal"
-            onStartRating={() => console.log('started rating')}
+            // onStartRating={() => console.log('started rating')}
           />
         </Card>
         <Text style={styles.welcome}>About {this.props.user}</Text>
