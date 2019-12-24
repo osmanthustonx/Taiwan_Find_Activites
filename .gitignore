@@ -57,3 +57,5 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+ios/Project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist

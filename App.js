@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,6 +14,7 @@ import {
   View,
   Text,
   StatusBar,
+  Platform,
 } from 'react-native';
 
 import {
@@ -24,9 +25,14 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import SplashScreen from 'react-native-splash-screen';
+
 import Route from './app/routes';
 
-const App: () => React$Node = () => {
+const App = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
   return <Route />;
 };
 
