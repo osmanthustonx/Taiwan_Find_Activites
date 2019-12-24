@@ -191,7 +191,7 @@ export default class Activity extends React.Component {
 
   render() {
     return (
-      <View style={{backgroundColor: '#FFF8F6'}}>
+      <View style={{backgroundColor: '#FFF8F6', height: '100%'}}>
         <View style={styles.f_direction_row}>
           <RNPickerSelect
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}

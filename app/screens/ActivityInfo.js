@@ -19,6 +19,7 @@ import {
   Text,
   ButtonGroup,
   Overlay,
+  Avatar,
 } from 'react-native-elements';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
@@ -37,7 +38,7 @@ export default class ActivityInfo extends React.Component {
   constructor() {
     super();
     this.state = {
-      selectedIndex: 0,
+      selectedIndex: -1,
       infoData: {},
       restaurantData: [],
       commentData: [],
@@ -45,7 +46,8 @@ export default class ActivityInfo extends React.Component {
       myComment: {},
       editData: {},
       showComment: false,
-      Score: 3,
+      showAddCommentBtn: true,
+      Score: 0,
       comment: '',
     };
     this.updateIndex = this.updateIndex.bind(this);
@@ -72,6 +74,13 @@ export default class ActivityInfo extends React.Component {
         console.warn(error);
       });
   };
+
+  /*-----取得個人資料------*/
+  async getProfileData() {
+    this.setState({
+      profile: JSON.parse(await AsyncStorage.getItem('userData')),
+    });
+  }
 
   /*------取得單頁API------*/
   async getInfo() {
@@ -183,6 +192,7 @@ export default class ActivityInfo extends React.Component {
         this.setState({
           myComment: JSON.parse(resJson),
           Score: JSON.parse(resJson).score,
+          showAddCommentBtn: false,
         });
       }
     } catch (error) {
@@ -250,6 +260,10 @@ export default class ActivityInfo extends React.Component {
     }
   }
 
+  UNSAFE_componentWillMount() {
+    this.getProfileData();
+  }
+
   async componentDidMount() {
     await this.getIsICommentBefore();
     await this.getInfo();
@@ -294,6 +308,7 @@ export default class ActivityInfo extends React.Component {
     let resJson = await res.text();
     this.setState({
       showComment: false,
+      showAddCommentBtn: false,
     });
     console.log(resJson);
   }
@@ -301,27 +316,76 @@ export default class ActivityInfo extends React.Component {
   commentsHeader = () => {
     return (
       <View>
-        {JSON.stringify(this.state.myComment) === '{}' ? (
-          <Button
-            title="新增評論"
-            onPress={() => {
-              this.setState({
-                showComment: true,
-              });
+        {this.state.showAddCommentBtn ? (
+          <Card
+            wrapperStyle={{
+              paddingTop: 10,
+              alignItems: 'center',
             }}
-          />
-        ) : (
-          <View>
-            <Button
-              title="編輯評論"
-              onPress={() => {
+            containerStyle={{
+              shadowColor: 'black',
+              shadowOffset: {width: 7, height: 7},
+              shadowOpacity: 0.2,
+              borderRadius: 10,
+              marginBottom: 10,
+            }}>
+            <Avatar
+              rounded
+              size="small"
+              source={{
+                uri: `https://tfa.rocket-coding.com/upfiles/images/${
+                  this.state.profile.Image
+                }`,
+              }}
+            />
+            <View paddingVertical={5} />
+            <Text style={{fontSize: 20}}>{'評分及評論'}</Text>
+            <View paddingVertical={5} />
+            <AirbnbRating
+              showRating={false}
+              defaultRating={this.state.Score}
+              onFinishRating={item => {
+                this.ratingCompleted(item);
                 this.setState({
                   showComment: true,
                 });
               }}
             />
-            <Text>{'我的留言：' + this.state.myComment.Main}</Text>
-          </View>
+          </Card>
+        ) : (
+          <Card
+            containerStyle={{
+              shadowColor: 'black',
+              shadowOffset: {width: 7, height: 7},
+              shadowOpacity: 0.2,
+              borderRadius: 10,
+              marginBottom: 10,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <View>
+                <Text style={{fontWeight: 'bold', fontSize: 20}}>
+                  {'你的評論'}
+                </Text>
+                <View paddingVertical={5} />
+                <Text>{this.state.myComment.Main}</Text>
+              </View>
+              <Button
+                icon={<Icon name="ios-create" size={30} color="#E5BE94" />}
+                buttonStyle={{width: 45}}
+                type="clear"
+                onPress={() => {
+                  this.setState({
+                    showComment: true,
+                  });
+                }}
+              />
+            </View>
+          </Card>
         )}
       </View>
     );
@@ -330,9 +394,25 @@ export default class ActivityInfo extends React.Component {
   _keyCommentExtractor = (item, index) => String(item.Id);
   _renderItem = ({item}) => {
     return (
-      <View>
+      <Card
+        containerStyle={{
+          shadowColor: 'black',
+          shadowOffset: {width: 7, height: 7},
+          shadowOpacity: 0.2,
+          borderRadius: 10,
+          marginBottom: 10,
+        }}>
+        <Avatar
+          rounded
+          size="small"
+          source={{
+            uri: `https://tfa.rocket-coding.com/upfiles/images/${
+              item.MemberImage
+            }`,
+          }}
+        />
         <Text>{item.MemberName + '：' + item.Main}</Text>
-      </View>
+      </Card>
     );
   };
 
@@ -348,8 +428,6 @@ export default class ActivityInfo extends React.Component {
           borderRadius: 10,
           marginBottom: 10,
           height: 180,
-          // flexDirection: 'row',
-          // justifyContent: 'space-around',
         }}>
         <View style={{width: 100, position: 'absolute'}}>
           <Image
@@ -414,7 +492,6 @@ export default class ActivityInfo extends React.Component {
             shadowOpacity: 0.2,
             borderRadius: 10,
           }}>
-          {/* <Text style={styles.welcome}>About {this.props.EId}</Text> */}
           <View
             style={{
               borderColor: '#ff9068',
@@ -468,7 +545,6 @@ export default class ActivityInfo extends React.Component {
             <View paddingVertical={10} />
             <View
               style={{
-                // width: width / 2,
                 flexDirection: 'row',
                 justifyContent: 'space-around',
               }}>
@@ -535,7 +611,7 @@ export default class ActivityInfo extends React.Component {
               // this.getIsICommentBefore();
               // this.beforeEditGetComment();
               // this.addComment();
-              console.log(this.state);
+              console.log(this.state.profile);
             }}
             title="資料測試按鈕"
           /> */}
@@ -544,7 +620,8 @@ export default class ActivityInfo extends React.Component {
               onPress={this.updateIndex}
               selectedIndex={selectedIndex}
               buttons={switchBtn}
-              containerStyle={{height: 50}}
+              containerStyle={{height: 30, borderWidth: 0}}
+              selectedButtonStyle={{backgroundColor: '#bd83ce'}}
             />
           </View>
         </Card>
@@ -564,6 +641,7 @@ export default class ActivityInfo extends React.Component {
               ListHeaderComponent={this.commentsHeader}
               renderItem={this._renderItem}
               onEndReachedThreshold={0.2}
+              extraData={this.state.showAddCommentBtn}
             />
           )}
         </SafeAreaView>
@@ -604,8 +682,8 @@ export default class ActivityInfo extends React.Component {
             </View>
             <View paddingVertical={10} />
             <Button
-              onPress={() => {
-                this.addComment();
+              onPress={async () => {
+                await this.addComment();
               }}
               title="Confirm"
               titleStyle={{color: 'white'}}

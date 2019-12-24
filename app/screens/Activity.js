@@ -296,7 +296,8 @@ export default class Activity extends React.Component {
       <LinearGradient
         colors={['#bd83ce', '#ff9068']}
         start={{x: 1, y: 1}}
-        end={{x: 0, y: 0}}>
+        end={{x: 0, y: 0}}
+        style={{height: '100%'}}>
         <View style={[styles.f_direction_row, styles.selectInput]}>
           <RNPickerSelect
             placeholder={{label: '選擇地區', value: null, color: '#9EA0A4'}}

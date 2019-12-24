@@ -66,9 +66,9 @@ export default class Routes extends Component {
                 component={Activity}
                 title="最新活動"
                 titleStyle={{color: 'black'}}
-                onEnter={() => {
-                  Actions.refresh({key: Math.random()}); //TODO 到詳細頁再回來會跳掉要解決
-                }}
+                // onEnter={() => {
+                //   Actions.refresh({key: Math.random()}); //TODO 到詳細頁再回來會跳掉要解決
+                // }}
               />
               <Scene
                 hideNavBar={true}
