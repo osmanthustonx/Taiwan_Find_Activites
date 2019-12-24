@@ -2,6 +2,7 @@
 
 ```
 第一步：安裝 [xcode](https://apps.apple.com/tw/app/xcode/id497799835?mt=12)
+[Google](http://www.google.com/)
 第二步：安裝 [React Native CLI](https://facebook.github.io/react-native/docs/getting-started)
 第三步：git clone 'https://github.com/BrianKuei/Taiwan_Find_Activites.git'
 第四步：npm install
