@@ -186,8 +186,6 @@ export default class ActivityInfo extends React.Component {
         }`,
       );
       let resJson = await res.text();
-      console.log(resJson);
-
       if (resJson !== '沒有留言過') {
         this.setState({
           myComment: JSON.parse(resJson),
@@ -210,7 +208,6 @@ export default class ActivityInfo extends React.Component {
         }&MId=${MId}`,
       );
       let resJson = await res.text();
-      console.log(resJson);
       if (resJson !== '沒有這筆資料') {
         this.setState({
           editData: JSON.parse(resJson),
@@ -313,6 +310,37 @@ export default class ActivityInfo extends React.Component {
     console.log(resJson);
   }
 
+  //編輯評論
+  async editComment(EId) {
+    let MId = JSON.parse(await AsyncStorage.getItem('userData')).Id;
+    let data = {
+      MId,
+      EId,
+      Id: this.state.myComment.Id,
+      Main: this.state.comment,
+      Score: this.state.Score,
+      Image: '',
+    };
+    let opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    let res = await fetch(
+      'https://tfa.rocket-coding.com/message/EditMessage',
+      opts,
+    );
+    let resJson = await res.text();
+    console.log(JSON.parse(resJson));
+    this.setState({
+      myComment: JSON.parse(resJson),
+      showComment: false,
+    });
+  }
+
+  //FlatList Header
   commentsHeader = () => {
     return (
       <View>
@@ -601,20 +629,6 @@ export default class ActivityInfo extends React.Component {
               </Text>
             </View>
           </View>
-
-          {/* <Button
-            onPress={async () => {
-              // await this.getInfo();
-              // await this.getRestaurantData();
-              // this.getAverageRate();
-              // this.getOtherCommentData();
-              // this.getIsICommentBefore();
-              // this.beforeEditGetComment();
-              // this.addComment();
-              console.log(this.state.profile);
-            }}
-            title="資料測試按鈕"
-          /> */}
           <View style={{marginTop: 5}}>
             <ButtonGroup
               onPress={this.updateIndex}
@@ -641,7 +655,7 @@ export default class ActivityInfo extends React.Component {
               ListHeaderComponent={this.commentsHeader}
               renderItem={this._renderItem}
               onEndReachedThreshold={0.2}
-              extraData={this.state.showAddCommentBtn}
+              extraData={Math.random()}
             />
           )}
         </SafeAreaView>
@@ -674,7 +688,7 @@ export default class ActivityInfo extends React.Component {
                 placeholder="Type something"
                 placeholderTextColor="grey"
                 multiline={true}
-                value={this.state.myComment.Main}
+                // value={this.state.myComment.Main}
                 onChangeText={value => {
                   this.setState({comment: value});
                 }}
@@ -683,7 +697,11 @@ export default class ActivityInfo extends React.Component {
             <View paddingVertical={10} />
             <Button
               onPress={async () => {
-                await this.addComment();
+                if (this.state.showAddCommentBtn) {
+                  await this.addComment();
+                } else {
+                  await this.editComment(this.props.EId);
+                }
               }}
               title="Confirm"
               titleStyle={{color: 'white'}}
