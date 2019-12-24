@@ -28,7 +28,7 @@ const utcDateToString = (momentInUTC: moment): string => {
 };
 
 export default class Activity extends React.Component {
-  onPress = EId => {
+  goActivityInfo = EId => {
     Actions.activityInfo({EId});
   };
   state = {
@@ -190,7 +190,7 @@ export default class Activity extends React.Component {
         }}>
         <TouchableOpacity
           onPress={() => {
-            this.onPress(item.Id);
+            this.goActivityInfo(item.Id);
           }}>
           <View>
             <Image

@@ -323,15 +323,6 @@ export default class ActivityInfo extends React.Component {
             <Text>{'我的留言：' + this.state.myComment.Main}</Text>
           </View>
         )}
-        {/* <Button
-          title="新增評論"
-          onPress={() => {
-            this.setState({
-              showComment: true,
-            });
-          }}
-        />
-        <Text>{'我的留言：' + this.state.myComment.Main}</Text> */}
       </View>
     );
   };
@@ -414,9 +405,28 @@ export default class ActivityInfo extends React.Component {
     const {selectedIndex} = this.state;
     const nowUTC = moment.utc();
     return (
-      <ScrollView>
-        <Card style={styles.container}>
-          <Text style={styles.welcome}>About {this.props.EId}</Text>
+      <ScrollView style={{backgroundColor: '#ff9068'}}>
+        <Card
+          containerStyle={{
+            marginTop: 20,
+            shadowColor: 'black',
+            shadowOffset: {width: 7, height: 7},
+            shadowOpacity: 0.2,
+            borderRadius: 10,
+          }}>
+          {/* <Text style={styles.welcome}>About {this.props.EId}</Text> */}
+          <View
+            style={{
+              borderColor: '#ff9068',
+              backgroundColor: '#ff9068',
+              borderWidth: 1,
+              width: '50%',
+              marginBottom: 10,
+              padding: 5,
+              borderRadius: 10,
+            }}>
+            <Text style={styles.welcome}>{this.state.infoData.Place}</Text>
+          </View>
           <Image
             source={{
               uri: `https://tfa.rocket-coding.com/upfiles/activitiestImage/${
@@ -425,25 +435,40 @@ export default class ActivityInfo extends React.Component {
             }}
             style={styles.activityImage}
           />
-          <View>
-            <Text>{this.state.infoData.Name}</Text>
+          <View paddingVertical={5} />
+          <View style={{paddingLeft: 10}}>
             <Text>
               {moment(this.state.infoData.StartDate).format('ll') +
                 '~' +
                 moment(this.state.infoData.EndDate).format('ll')}
             </Text>
-            <Text>{this.state.infoData.Place}</Text>
-            <Text>{'分數' + this.state.averageRateData}</Text>
-            <Text>{'留言數' + this.state.infoData.MessageCount}</Text>
-            <Text
-              onPress={() => {
-                Linking.openURL(this.state.infoData.website);
-              }}>
-              官網連結
+            <View paddingVertical={2} />
+            <Text style={{fontSize: 20, lineHeight: 25}}>
+              {this.state.infoData.Name}
             </Text>
+            <View paddingVertical={2} />
+            <View style={{flexDirection: 'row'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingRight: 10,
+                }}>
+                <Icon
+                  name={'ios-star'}
+                  size={20}
+                  style={{paddingLeft: 5, paddingRight: 5, color: '#F0C330'}}
+                />
+                <Text>{this.state.averageRateData}</Text>
+                <Text>{`(${this.state.infoData.MessageCount})`}</Text>
+              </View>
+            </View>
+            <View paddingVertical={2} />
+
+            <View paddingVertical={10} />
             <View
               style={{
-                width: width / 2,
+                // width: width / 2,
                 flexDirection: 'row',
                 justifyContent: 'space-around',
               }}>
@@ -456,6 +481,32 @@ export default class ActivityInfo extends React.Component {
                   name={`ios-heart${this.state.infoData.IsFavorite}`}
                   size={30}
                   style={{color: '#ff9068'}}
+                />
+              </Text>
+
+              <View>
+                <Icon
+                  name={'ios-home'}
+                  size={30}
+                  style={{color: '#89BDE6'}}
+                  onPress={() => {
+                    Linking.openURL(this.state.infoData.website);
+                  }}
+                />
+              </View>
+              <Text
+                onPress={() => {
+                  ActivityInfo.addToCalendar(
+                    this.state.infoData.Name,
+                    this.state.infoData.Place,
+                    nowUTC,
+                  );
+                }}
+                title="Add to calendar">
+                <Icon
+                  name="ios-calendar"
+                  size={30}
+                  style={{color: '#7FCAB6'}}
                 />
               </Text>
               <Text
@@ -472,25 +523,10 @@ export default class ActivityInfo extends React.Component {
                   style={{color: '#35477d'}}
                 />
               </Text>
-              <Text
-                onPress={() => {
-                  ActivityInfo.addToCalendar(
-                    this.state.infoData.Name,
-                    this.state.infoData.Place,
-                    nowUTC,
-                  );
-                }}
-                title="Add to calendar">
-                <Icon
-                  name="ios-calendar"
-                  size={30}
-                  style={{color: '#7FCAB6'}}
-                />
-              </Text>
             </View>
           </View>
 
-          <Button
+          {/* <Button
             onPress={async () => {
               // await this.getInfo();
               // await this.getRestaurantData();
@@ -502,15 +538,16 @@ export default class ActivityInfo extends React.Component {
               console.log(this.state);
             }}
             title="資料測試按鈕"
-          />
+          /> */}
+          <View style={{marginTop: 5}}>
+            <ButtonGroup
+              onPress={this.updateIndex}
+              selectedIndex={selectedIndex}
+              buttons={switchBtn}
+              containerStyle={{height: 50}}
+            />
+          </View>
         </Card>
-
-        <ButtonGroup
-          onPress={this.updateIndex}
-          selectedIndex={selectedIndex}
-          buttons={switchBtn}
-          containerStyle={{height: 50}}
-        />
 
         <SafeAreaView>
           {this.state.selectedIndex ? (
@@ -590,9 +627,14 @@ var styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   welcome: {
-    fontSize: 20,
+    fontSize: 15,
     textAlign: 'center',
     margin: 10,
+    color: 'white',
+    fontWeight: 'bold',
+    // textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    // textShadowOffset: {width: -1, height: 1},
+    // textShadowRadius: 10,
   },
   instructions: {
     textAlign: 'center',

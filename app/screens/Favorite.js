@@ -27,6 +27,11 @@ export default class Favorite extends React.Component {
     myFavorites: [],
     refreshing: false,
   };
+
+  goActivityInfo = EId => {
+    Actions.activityInfo({EId});
+  };
+
   static addToCalendar = (title, location, startDateUTC) => {
     const eventConfig = {
       title,
@@ -92,6 +97,7 @@ export default class Favorite extends React.Component {
 
   _renderItem = ({item}) => {
     const nowUTC = moment.utc();
+    console.log(item);
     return (
       <Card
         containerStyle={{
@@ -102,7 +108,10 @@ export default class Favorite extends React.Component {
           borderRadius: 10,
           width: 330,
         }}>
-        <TouchableOpacity onPress={this.onPress}>
+        <TouchableOpacity
+          onPress={() => {
+            this.goActivityInfo(item.id);
+          }}>
           <View>
             <Image
               source={{
