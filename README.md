@@ -11,3 +11,7 @@
 第五步：cd ios && pod install && cd ..
 
 第六部：npx react-native run-ios --simulator='iPhone 8'
+
+## 安裝到手機：
+
+IOS 版本：13.3
