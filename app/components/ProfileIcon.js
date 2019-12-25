@@ -11,7 +11,7 @@ const propTypes = {
 const ProfileIcon = props => {
   return (
     <Text style={{color: props.focused ? '#ff9068' : 'black'}}>
-      <Icon name="ios-person" size={20} />
+      <Icon name="ios-person" size={30} />
       {props.title}
     </Text>
   );

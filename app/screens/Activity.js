@@ -219,9 +219,9 @@ export default class Activity extends React.Component {
           <View paddingVertical={9} />
           <View
             style={{
-              width: width / 2,
+              width: width /1.5,
               flexDirection: 'row',
-              justifyContent: 'space-around',
+              justifyContent: 'space-between',
             }}>
             <Text
               onPress={async () => {

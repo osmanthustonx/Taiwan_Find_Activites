@@ -134,7 +134,7 @@ export default class Activity extends React.Component {
           shadowOpacity: 0.2,
           borderRadius: 10,
           marginBottom: 10,
-          height: 180,
+          minHeight: 150,
           // flexDirection: 'row',
           // justifyContent: 'space-around',
         }}>
@@ -157,7 +157,7 @@ export default class Activity extends React.Component {
             justifyContent: 'center',
             display: 'flex',
           }}>
-          <Text h1 h1Style={{fontSize: 20}}>
+          <Text h1 h1Style={{fontSize: 20,lineHeight:20}}>
             {item.Name}
           </Text>
           <Text>{item.Place}</Text>
@@ -167,8 +167,8 @@ export default class Activity extends React.Component {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-around',
-              width: '70%',
+              justifyContent: 'space-between',
+              width: '80%',
             }}>
             <Text>{'距離展覽約：' + item.DisView + ' '}</Text>
             <Text
@@ -178,8 +178,9 @@ export default class Activity extends React.Component {
                   longitude: item.lng,
                   title: item.Name,
                 })
-              }>
-              <Icon name="ios-navigate" size={25} style={{color: '#35477d'}} />
+              }
+              >
+              <Icon name="ios-navigate" size={30} style={{color: '#35477d'}} />
             </Text>
           </View>
         </View>

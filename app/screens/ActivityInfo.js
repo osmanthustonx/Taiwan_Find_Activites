@@ -565,7 +565,9 @@ export default class ActivityInfo extends React.Component {
                   style={{paddingLeft: 5, paddingRight: 5, color: '#F0C330'}}
                 />
                 <Text>{this.state.averageRateData}</Text>
+                {/* <Text>{'4.8'}</Text> */}
                 <Text>{`(${this.state.infoData.MessageCount})`}</Text>
+                {/* <Text>{'(563)'}</Text> */}
               </View>
             </View>
             <View paddingVertical={2} />
