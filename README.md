@@ -12,6 +12,6 @@
 
 第六部：npx react-native run-ios --simulator='iPhone 8'
 
-## 安裝到手機：
+## 需要的手機版本：
 
 IOS 版本：13.3
