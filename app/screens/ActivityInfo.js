@@ -521,7 +521,6 @@ export default class ActivityInfo extends React.Component {
             shadowOpacity: 0.2,
             borderRadius: 10,
           }}>
-          <Text>{this.props.EId}</Text>
           <View
             style={{
               borderColor: '#ff9068',
@@ -565,10 +564,10 @@ export default class ActivityInfo extends React.Component {
                   size={20}
                   style={{paddingLeft: 5, paddingRight: 5, color: '#F0C330'}}
                 />
-                {/* <Text>{this.state.averageRateData}</Text> */}
-                <Text>{'4.8'}</Text>
-                <Text>{'(563)'}</Text>
-                {/* <Text>{this.state.averageRateData}</Text> */}
+                <Text>{this.state.averageRateData}</Text>
+                {/* <Text>{'4.8'}</Text>
+                <Text>{'(563)'}</Text> */}
+                <Text>{`(${this.state.infoData.MessageCount})`}</Text>
               </View>
             </View>
             <View paddingVertical={2} />
