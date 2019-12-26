@@ -1,6 +1,6 @@
 # 安裝步驟：
 
-第一步：安裝 [xcode](https://apps.apple.com/tw/app/xcode/id497799835?mt=12)
+第一步：安裝 [Xcode](https://apps.apple.com/tw/app/xcode/id497799835?mt=12)
 
 第二步：安裝 [React Native CLI](https://facebook.github.io/react-native/docs/getting-started)
 
