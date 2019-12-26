@@ -101,7 +101,8 @@ export default class Favorite extends React.Component {
     return (
       <Card
         containerStyle={{
-          marginTop: 40,
+          marginTop: 30,
+          marginBottom: 20,
           shadowColor: 'black',
           shadowOffset: {width: 7, height: 7},
           shadowOpacity: 0.2,
@@ -139,7 +140,7 @@ export default class Favorite extends React.Component {
           <View paddingVertical={9} />
           <View
             style={{
-              width: width / 2,
+              width: width / 1.5,
               flexDirection: 'row',
               justifyContent: 'space-around',
             }}>
