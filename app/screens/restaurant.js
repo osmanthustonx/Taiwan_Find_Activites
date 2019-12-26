@@ -135,8 +135,6 @@ export default class Activity extends React.Component {
           borderRadius: 10,
           marginBottom: 10,
           minHeight: 150,
-          // flexDirection: 'row',
-          // justifyContent: 'space-around',
         }}>
         <View style={{width: 100, position: 'absolute'}}>
           <Image

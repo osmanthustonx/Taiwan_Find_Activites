@@ -205,7 +205,7 @@ export default class Activity extends React.Component {
         </TouchableOpacity>
         <View paddingVertical={7} />
         <View style={styles.info}>
-          <Text h1 h1Style={{fontSize: 20}}>
+          <Text h1 h1Style={{fontSize: 20, lineHeight: 25}}>
             {item.Name}
           </Text>
           <View paddingVertical={4} />

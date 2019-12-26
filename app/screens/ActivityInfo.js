@@ -259,11 +259,11 @@ export default class ActivityInfo extends React.Component {
 
   UNSAFE_componentWillMount() {
     this.getProfileData();
+    this.getInfo();
   }
 
   async componentDidMount() {
     await this.getIsICommentBefore();
-    await this.getInfo();
     await this.getAverageRate();
     await this.getOtherCommentData();
     await this.getRestaurantData();
@@ -303,11 +303,12 @@ export default class ActivityInfo extends React.Component {
       opts,
     );
     let resJson = await res.text();
+    console.log(resJson);
     this.setState({
       showComment: false,
       showAddCommentBtn: false,
+      myComment: JSON.parse(resJson),
     });
-    console.log(resJson);
   }
 
   //編輯評論
@@ -455,7 +456,7 @@ export default class ActivityInfo extends React.Component {
           shadowOpacity: 0.2,
           borderRadius: 10,
           marginBottom: 10,
-          height: 180,
+          minHeight: 150,
         }}>
         <View style={{width: 100, position: 'absolute'}}>
           <Image
@@ -486,8 +487,8 @@ export default class ActivityInfo extends React.Component {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-around',
-              width: '70%',
+              justifyContent: 'space-between',
+              width: '80%',
             }}>
             <Text>{'距離展覽約：' + item.DisView + ' '}</Text>
             <Text
@@ -498,7 +499,7 @@ export default class ActivityInfo extends React.Component {
                   title: item.Name,
                 })
               }>
-              <Icon name="ios-navigate" size={25} style={{color: '#35477d'}} />
+              <Icon name="ios-navigate" size={30} style={{color: '#35477d'}} />
             </Text>
           </View>
         </View>
@@ -514,18 +515,18 @@ export default class ActivityInfo extends React.Component {
       <ScrollView style={{backgroundColor: '#ff9068'}}>
         <Card
           containerStyle={{
-            marginTop: 20,
+            marginTop: 30,
             shadowColor: 'black',
             shadowOffset: {width: 7, height: 7},
             shadowOpacity: 0.2,
             borderRadius: 10,
           }}>
+          <Text>{this.props.EId}</Text>
           <View
             style={{
               borderColor: '#ff9068',
               backgroundColor: '#ff9068',
               borderWidth: 1,
-              width: '50%',
               marginBottom: 10,
               padding: 5,
               borderRadius: 10,
@@ -564,10 +565,10 @@ export default class ActivityInfo extends React.Component {
                   size={20}
                   style={{paddingLeft: 5, paddingRight: 5, color: '#F0C330'}}
                 />
-                <Text>{this.state.averageRateData}</Text>
-                {/* <Text>{'4.8'}</Text> */}
-                <Text>{`(${this.state.infoData.MessageCount})`}</Text>
-                {/* <Text>{'(563)'}</Text> */}
+                {/* <Text>{this.state.averageRateData}</Text> */}
+                <Text>{'4.8'}</Text>
+                <Text>{'(563)'}</Text>
+                {/* <Text>{this.state.averageRateData}</Text> */}
               </View>
             </View>
             <View paddingVertical={2} />
@@ -730,9 +731,6 @@ var styles = StyleSheet.create({
     margin: 10,
     color: 'white',
     fontWeight: 'bold',
-    // textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    // textShadowOffset: {width: -1, height: 1},
-    // textShadowRadius: 10,
   },
   instructions: {
     textAlign: 'center',

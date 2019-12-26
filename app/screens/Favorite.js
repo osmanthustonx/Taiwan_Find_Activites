@@ -101,7 +101,7 @@ export default class Favorite extends React.Component {
     return (
       <Card
         containerStyle={{
-          marginTop: 20,
+          marginTop: 30,
           marginBottom: 20,
           shadowColor: 'black',
           shadowOffset: {width: 7, height: 7},
