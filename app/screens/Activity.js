@@ -14,7 +14,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import {Input, Button, Card, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import 'moment/locale/zh-tw';
+// import 'moment/locale/zh-tw';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Popup, showLocation} from 'react-native-map-link';
 import LinearGradient from 'react-native-linear-gradient';
@@ -23,7 +23,7 @@ import * as AddCalendarEvent from 'react-native-add-calendar-event';
 
 const utcDateToString = (momentInUTC: moment): string => {
   let s = moment.utc(momentInUTC).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-  // console.warn(s);
+  console.warn(s);
   return s;
 };
 
@@ -219,7 +219,7 @@ export default class Activity extends React.Component {
           <View paddingVertical={9} />
           <View
             style={{
-              width: width /1.5,
+              width: width / 1.5,
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>

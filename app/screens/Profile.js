@@ -152,6 +152,7 @@ export default class Activity extends React.Component {
       Birth: this.state.profile.Birth,
       PasswordSalt: this.state.profile.PasswordSalt,
     });
+    console.log(data);
     let opts = {
       method: 'POST',
       headers: {
@@ -169,7 +170,7 @@ export default class Activity extends React.Component {
         opts,
       );
       let resJson = await res.text();
-      console.log(JSON.parse(resJson));
+      // console.log(JSON.parse(resJson));
       if (resJson !== '有錯誤') {
         await AsyncStorage.setItem('userData', resJson);
         Alert.alert(
