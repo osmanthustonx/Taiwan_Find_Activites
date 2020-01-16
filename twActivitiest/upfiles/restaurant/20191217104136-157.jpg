@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>高雄旅遊網 錯誤訊息頁/Error Page</title>
+    <link rel="shortcut icon" href="favicon/favicon.ico">
+		
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
+		<link rel="stylesheet" type="text/css" href="css/1/stylesheet_language.css" />
+		<link rel="stylesheet" type="text/css" href="css/stylesheet_rwd.css" />
+		<!--關掉js用-->
+		<noscript>
+			<link rel="stylesheet" type="text/css" href="css/noScript.css" />
+		</noscript>
+		<script type="text/javascript" src="js/function.js"></script>
+</head>
+<body>
+    <div class="errorPage">
+        <div class="wrap">
+                <div class="box">
+                    <h1 class="t1" style="font-size:2em; color:#fe892a">高雄旅遊網</h1>
+                        <p class="t2">找不到資源</p>
+                        <p class="t3">YOUR RESORCES CAN NOT BE FOUND.</p>
+                        <p>您要尋找的資源可能已經移除、名稱已經變更或暫時無法使用。</p>
+                        <p>The resource you are looking for could have been removed , had its name changed, or is temporarily unavailable.</p>
+                        <br /><br /><a href="index.aspx" title="回首頁 / Home">回首頁 / Home</a>
+                </div>
+        </div>
+    </div>
+
+</body>
+</html>
